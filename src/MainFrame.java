@@ -1,11 +1,13 @@
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
+import java.io.File;
+
 public class MainFrame{
 
     MainFrame() {
         JFrame frame = new JFrame("Aplikacja Kinomaniak");
-        frame.setSize(2000, 1200);
+        frame.setSize(1800, 1000);
         frame.setLayout(null);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,6 +30,7 @@ public class MainFrame{
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Repertuar();
+                frame.dispose();
             }
         });
         JButton button3 = new JButton("Aktualności");
@@ -39,6 +42,7 @@ public class MainFrame{
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Aktualnosci();
+                frame.dispose();
             }
         });
         JButton button4 = new JButton("Moje konto");
@@ -50,6 +54,7 @@ public class MainFrame{
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Moje_Konto();
+                frame.dispose();
             }
         });
         JButton button5 = new JButton("Cennik");
@@ -61,6 +66,7 @@ public class MainFrame{
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Cennik();
+                frame.dispose();
             }
         });
         JButton button6 = new JButton("Zaloguj się");
@@ -72,6 +78,7 @@ public class MainFrame{
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Zaloguj_sie();
+                frame.dispose();
             }
         });
         JButton button7 = new JButton("Wyloguj się");
@@ -83,13 +90,18 @@ public class MainFrame{
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Wyloguj_sie();
+                frame.dispose();
             }
         });
         // logo
-        ImageIcon logo = new ImageIcon("logo.PNG");
-        JLabel label = new JLabel(logo);
-        label.setBounds(10, 10, 70, 70);
-        frame.add(label);
+        try {
+            ImageIcon logo = new ImageIcon(new ImageIcon("images/logo.PNG").getImage().getScaledInstance(70, 70, Image.SCALE_DEFAULT));
+            JLabel label = new JLabel(logo);
+            label.setBounds(10, 10, 70, 70);
+            frame.add(label);
+        } catch (Exception e) {
+            System.out.println("Nie znaleziono pliku");
+        }
 
         //tekst na temat kina
         JLabel label2 = new JLabel("Nasze kino działa już od 30 lat. " +
@@ -119,12 +131,33 @@ public class MainFrame{
         frame.add(label7);
 
         // obrazek kina
-        ImageIcon kino = new ImageIcon("cinema.jpg");
-        JLabel label5 = new JLabel(kino);
-        label5.setBounds(130, 300, 10, 10);
-        frame.add(label5);
+        try {
+            ImageIcon kino = new ImageIcon(new ImageIcon("images/cinema.jpg").getImage().getScaledInstance(550, 450, Image.SCALE_DEFAULT));
+            JLabel label5 = new JLabel(kino);
+            label5.setBounds(130, 250, 550, 450);
+            frame.add(label5);
+        } catch (Exception e) {
+            System.out.println("Nie znaleziono pliku");
+        }
 
+        // TODO: to jest do tego, zeby zawsze po uruchomieniu zawsze bylo wszystko narysowane poprawnie - potem to albo usunac jak sie uda znalezc czemu sie nie zawsze wszystko rysuje albo zrobic jakiegos if'a zeby repaint() byl tylko raz po uruchomieniu
+        frame.repaint();
 
+        // TODO: uwaga bez podania pelnej sciezki mi nie dzialalo, a tez mam te obrazki w src, z podaniem pelnej sciezki juz dziala
+//        SwingUtilities.invokeLater(() -> {
+//            try {
+//                JFrame fdebugjpg = new JFrame();
+//                fdebugjpg.setSize(400, 400);
+//                fdebugjpg.setVisible(true);
+//                fdebugjpg.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//                ImageIcon debugjpg = new ImageIcon("images/cinema.jpg");
+//                JLabel ldebugjpg = new JLabel(debugjpg);
+//                fdebugjpg.add(ldebugjpg);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
 
     }
 }
