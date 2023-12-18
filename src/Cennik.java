@@ -9,7 +9,7 @@ public class Cennik {
     Cennik()
     {
         frame = new JFrame("Aplikacja Kinomaniak");
-        frame.setSize(2000, 1200);
+        frame.setSize(1800, 1000);
         frame.setLayout(null);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,6 +28,7 @@ public class Cennik {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new MainFrame();
+                frame.dispose();
             }
         });
         JButton button2 = new JButton("Repertuar");
@@ -39,6 +40,7 @@ public class Cennik {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Repertuar();
+                frame.dispose();
             }
         });
         JButton button3 = new JButton("Aktualności");
@@ -50,6 +52,7 @@ public class Cennik {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Aktualnosci();
+                frame.dispose();
             }
         });
         JButton button4 = new JButton("Moje konto");
@@ -61,6 +64,7 @@ public class Cennik {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Moje_Konto();
+                frame.dispose();
             }
         });
         JButton button5 = new JButton("Cennik");
@@ -83,6 +87,7 @@ public class Cennik {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Zaloguj_sie();
+                frame.dispose();
             }
         });
         JButton button7 = new JButton("Wyloguj się");
@@ -95,13 +100,18 @@ public class Cennik {
                 // jakis komentarz ze znajdujemy sie wlasnie w tej sekcji
                 JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Wyloguj_sie();
+                frame.dispose();
             }
         });
         // logo
-        ImageIcon logo = new ImageIcon("logo.PNG");
-        JLabel label = new JLabel(logo);
-        label.setBounds(10, 10, 70, 70);
-        frame.add(label);
+        try {
+            ImageIcon logo = new ImageIcon(new ImageIcon("images/logo.PNG").getImage().getScaledInstance(70, 70, Image.SCALE_DEFAULT));
+            JLabel label = new JLabel(logo);
+            label.setBounds(10, 10, 70, 70);
+            frame.add(label);
+        } catch (Exception e) {
+            System.out.println("Nie znaleziono pliku");
+        }
 
         // cennik
         JLabel label2 = new JLabel("Cennik");
@@ -127,6 +137,7 @@ public class Cennik {
         JLabel label = new JLabel(ticket_name + "...................................................................................................................." + ticket_prize);
         label.setBounds(x, y, 600, 50);
         frame.add(label);
+
     }
 
     private void add_discount(double discount_procent ,String discount_name,int x ,int y) {

@@ -9,7 +9,7 @@ public class Wyloguj_sie {
         Wyloguj_sie()
         {
             frame = new JFrame("Aplikacja Kinomaniak");
-            frame.setSize(2000, 1200);
+            frame.setSize(1800, 1000);
             frame.setLayout(null);
             frame.setVisible(true);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,6 +28,7 @@ public class Wyloguj_sie {
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                     new MainFrame();
+                    frame.dispose();
                 }
             });
             JButton button2 = new JButton("Repertuar");
@@ -39,6 +40,7 @@ public class Wyloguj_sie {
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                     new Repertuar();
+                    frame.dispose();
                 }
             });
             JButton button3 = new JButton("Aktualności");
@@ -50,6 +52,7 @@ public class Wyloguj_sie {
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                     new Aktualnosci();
+                    frame.dispose();
                 }
             });
             JButton button4 = new JButton("Moje konto");
@@ -61,6 +64,7 @@ public class Wyloguj_sie {
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                     new Moje_Konto();
+                    frame.dispose();
                 }
             });
             JButton button5 = new JButton("Cennik");
@@ -72,6 +76,7 @@ public class Wyloguj_sie {
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                     new Cennik();
+                    frame.dispose();
                 }
             });
             JButton button6 = new JButton("Zaloguj się");
@@ -83,6 +88,7 @@ public class Wyloguj_sie {
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                     new Zaloguj_sie();
+                    frame.dispose();
                 }
             });
             JButton button7 = new JButton("Wyloguj się");
@@ -97,16 +103,23 @@ public class Wyloguj_sie {
                 }
             });
             // logo
-            ImageIcon logo = new ImageIcon("logo.PNG");
-            JLabel label = new JLabel(logo);
-            label.setBounds(10, 10, 70, 70);
-            frame.add(label);
+            try {
+                ImageIcon logo = new ImageIcon(new ImageIcon("images/logo.PNG").getImage().getScaledInstance(70, 70, Image.SCALE_DEFAULT));
+                JLabel label = new JLabel(logo);
+                label.setBounds(10, 10, 70, 70);
+                frame.add(label);
+            } catch (Exception e) {
+                System.out.println("Nie znaleziono pliku");
+            }
 
-            //napis
-            JLabel labelwyolgowania = new JLabel("Wylogowano pomyślnie!");
-            label.setBounds(600, 600, 800, 80);
-            label.setFont(new Font("Arial", Font.PLAIN, 30));
-            frame.add(labelwyolgowania);
+//            //napis
+//            JLabel labelwylogowania = new JLabel("Wylogowano pomyślnie!");
+//
+//            // TODO: tu wczesniej bylo zamiast labelwylogowania samo label
+//
+//            labelwylogowania.setBounds(600, 600, 800, 80);
+//            labelwylogowania.setFont(new Font("Arial", Font.PLAIN, 30));
+//            frame.add(labelwylogowania);
 
             JButton button8 = new JButton("Wylogowano pomyślnie!");
             button8.setBounds(600, 600, 800, 80);
