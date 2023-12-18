@@ -11,6 +11,9 @@ public class Repertuar {
     private List<JComponent> detailsElements = new ArrayList<>();
     private List<JComponent> numbersElements = new ArrayList<>();
     private List<JComponent> placesElements = new ArrayList<>();
+    private List<JComponent> summaryElements = new ArrayList<>();
+    private List<JComponent> methodsElements = new ArrayList<>();
+
     Repertuar()
     {
         frame = new JFrame("Aplikacja Kinomaniak");
@@ -101,18 +104,10 @@ public class Repertuar {
             }
         });
         // logo
-//        ImageIcon logo = new ImageIcon("images/logo.PNG");
-//        JLabel label = new JLabel(logo);
-//        label.setBounds(10, 10, 70, 70);
-//        frame.add(label);
-        try {
-            ImageIcon logo = new ImageIcon(new ImageIcon("images/logo.PNG").getImage().getScaledInstance(70, 70, Image.SCALE_DEFAULT));
-            JLabel label = new JLabel(logo);
-            label.setBounds(10, 10, 70, 70);
-            frame.add(label);
-        } catch (Exception e) {
-            System.out.println("Nie znaleziono pliku");
-        }
+        ImageIcon logo = new ImageIcon("logo.PNG");
+        JLabel label = new JLabel(logo);
+        label.setBounds(10, 10, 70, 70);
+        frame.add(label);
 
         JLabel label_movie_title = new JLabel("Wyszukaj film");
         label_movie_title.setBounds(100, 200, 1200, 50);
@@ -380,6 +375,9 @@ public class Repertuar {
                                     c.setVisible(false);
                                 }
 
+                                //zmienna przechowujaca liczbe biletow, pilnuje, zeby nie zaznaczyc wiecej siedzien niz osob
+                                final int[] number_of_people = {5};
+
                                 JLabel label_select_places = new JLabel("Wybierz miejsca ze schematu:");
                                 label_select_places.setBounds(100, 200, 1200, 50);
                                 label_select_places.setFont(new Font("Verdana", Font.PLAIN, 40));
@@ -391,7 +389,61 @@ public class Repertuar {
                                 frame.add(back_to_numbers);
                                 placesElements.add(back_to_numbers);
 
-                                //......
+                                JLabel label_screen = new JLabel("Ekran");
+                                label_screen.setBounds(100, 320, 100 * 10 + 9 * 10, 80);
+                                label_screen.setFont(new Font("Verdana", Font.PLAIN, 30));
+                                label_screen.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.black));
+                                frame.add(label_screen);
+                                placesElements.add(label_screen);
+
+                                JLabel label_number_of_tickets = new JLabel("Wybierz jeszcze: " + Integer.toString(number_of_people[0]) + " miejsc");
+                                label_number_of_tickets.setBounds(100, 800, 500, 50);
+                                label_number_of_tickets.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                frame.add(label_number_of_tickets);
+                                placesElements.add(label_number_of_tickets);
+
+                                for (int i = 0; i < 10; i++) {
+                                    for (int j = 0; j < 5; j++) {
+                                        String place_description;
+                                        if (j * 10 + i != 4 && j * 10 + i != 5)
+                                            place_description = Integer.toString(j * 10 + i);
+                                        else if (i == 4)
+                                            place_description = "N4";
+                                        else
+                                            place_description = "N5";
+                                        JButton place = new JButton(place_description);
+                                        place.setBounds(100 + (i % 10) * 110, 450 + (j % 10) * 70, 100, 60);
+                                        place.setFont(new Font("Verdana", Font.PLAIN, 12));
+                                        if (j == 4)
+                                            place.setBackground(Color.red);
+                                        else
+                                            place.setBackground(Color.green);
+                                        frame.add(place);
+                                        placesElements.add(place);
+
+                                        place.addActionListener(new ActionListener() {
+
+                                            @Override
+                                            public void actionPerformed(ActionEvent e) {
+                                                if (number_of_people[0] > 0 && place.getBackground() == Color.green) {
+                                                    place.setBackground(Color.orange);
+                                                    number_of_people[0]--;
+                                                    label_number_of_tickets.setVisible(false);
+                                                    label_number_of_tickets.setText("Wybierz jeszcze: " + Integer.toString(number_of_people[0]) + " miejsc");
+                                                    label_number_of_tickets.setVisible(true);
+                                                }
+                                            }
+                                        });
+
+
+                                    }
+                                }
+
+                                JButton approve_all_details = new JButton("Przejdź do podsumowania");
+                                approve_all_details.setBounds(800, 900, 400, 50);
+                                approve_all_details.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                frame.add(approve_all_details);
+                                placesElements.add(approve_all_details);
 
                                 back_to_numbers.addActionListener(new ActionListener() {
 
@@ -403,6 +455,222 @@ public class Repertuar {
                                         for (JComponent c : numbersElements) {
                                             c.setVisible(true);
                                         }
+                                    }
+                                });
+
+                                approve_all_details.addActionListener(new ActionListener() {
+
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        for (JComponent c : placesElements) {
+                                            c.setVisible(false);
+                                        }
+
+                                        JLabel label_summary = new JLabel("Podsumowanie");
+                                        label_summary.setBounds(100, 200, 1200, 50);
+                                        label_summary.setFont(new Font("Verdana", Font.PLAIN, 40));
+                                        frame.add(label_summary);
+                                        summaryElements.add(label_summary);
+
+                                        JButton back_to_places = new JButton("Powrót");
+                                        back_to_places.setBounds(100, 270, 100, 30);
+                                        frame.add(back_to_places);
+                                        summaryElements.add(back_to_places);
+
+                                        back_to_places.addActionListener(new ActionListener() {
+
+                                            @Override
+                                            public void actionPerformed(ActionEvent e) {
+                                                for (JComponent c : summaryElements) {
+                                                    c.setVisible(false);
+                                                }
+                                                for (JComponent c : placesElements) {
+                                                    c.setVisible(true);
+                                                }
+                                            }
+                                        });
+
+                                        JLabel label_revision = new JLabel("<html>Tytuł filmu: Chłopi<br>" +
+                                                "Godzina rozpoczęcia: 16:00<br>" +
+                                                "Miejsca: 10, 11, 12, 13, 14<br>" +
+                                                "Rodzaje biletów: Normalne - 1, Uczniowskie / studenckie - 4<br>" +
+                                                "Do zapłaty: 100.00 zł</html>");
+                                        label_revision.setBounds(100, 320, 1200, 200);
+                                        label_revision.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                        frame.add(label_revision);
+                                        summaryElements.add(label_revision);
+
+                                        JButton buy_and_pay = new JButton("Kupuję i płacę");
+                                        buy_and_pay.setBounds(500, 550, 200, 50);
+                                        buy_and_pay.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                        frame.add(buy_and_pay);
+                                        summaryElements.add(buy_and_pay);
+
+                                        buy_and_pay.addActionListener(new ActionListener() {
+
+                                            @Override
+                                            public void actionPerformed(ActionEvent e) {
+                                                for (JComponent c : summaryElements) {
+                                                    c.setVisible(false);
+                                                }
+                                                JLabel select_payment_form = new JLabel("Wybierz formę płatności");
+                                                select_payment_form.setBounds(100, 200, 1200, 50);
+                                                select_payment_form.setFont(new Font("Verdana", Font.PLAIN, 40));
+                                                frame.add(select_payment_form);
+                                                methodsElements.add(select_payment_form);
+
+                                                JButton back_to_summary = new JButton("Powrót");
+                                                back_to_summary.setBounds(100, 270, 100, 30);
+                                                frame.add(back_to_summary);
+                                                methodsElements.add(back_to_summary);
+
+                                                back_to_summary.addActionListener(new ActionListener() {
+
+                                                    @Override
+                                                    public void actionPerformed(ActionEvent e) {
+                                                        for (JComponent c : methodsElements) {
+                                                            c.setVisible(false);
+                                                        }
+                                                        for (JComponent c : summaryElements) {
+                                                            c.setVisible(true);
+                                                        }
+                                                    }
+                                                });
+
+                                                JButton card = new JButton("Karta płatnicza");
+                                                card.setBounds(100, 370, 200, 50);
+                                                card.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                                frame.add(card);
+                                                methodsElements.add(card);
+
+                                                JButton blik = new JButton("Kod BLIK");
+                                                blik.setBounds(350, 370, 200, 50);
+                                                blik.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                                frame.add(blik);
+                                                methodsElements.add(blik);
+
+                                                JLabel label_write_card_number = new JLabel("Podaj numer karty: ");
+                                                label_write_card_number.setBounds(100, 470, 350, 50);
+                                                label_write_card_number.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                                frame.add(label_write_card_number);
+                                                methodsElements.add(label_write_card_number);
+                                                label_write_card_number.setVisible(false);
+
+                                                JTextField write_card_number = new JTextField();
+                                                write_card_number.setBounds(400, 470, 500, 50);
+                                                write_card_number.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                                frame.add(write_card_number);
+                                                methodsElements.add(write_card_number);
+                                                write_card_number.setVisible(false);
+
+                                                JLabel label_write_exp_date = new JLabel("Podaj datę ważności karty: ");
+                                                label_write_exp_date.setBounds(100, 530, 350, 50);
+                                                label_write_exp_date.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                                frame.add(label_write_exp_date);
+                                                methodsElements.add(label_write_exp_date);
+                                                label_write_exp_date.setVisible(false);
+
+                                                JTextField write_exp_date = new JTextField();
+                                                write_exp_date.setBounds(400, 530, 100, 50);
+                                                write_exp_date.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                                frame.add(write_exp_date);
+                                                methodsElements.add(write_exp_date);
+                                                write_exp_date.setVisible(false);
+
+                                                JLabel label_write_CVC = new JLabel("Podaj CVC / CVV: ");
+                                                label_write_CVC.setBounds(100, 590, 350, 50);
+                                                label_write_CVC.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                                frame.add(label_write_CVC);
+                                                methodsElements.add(label_write_CVC);
+                                                label_write_CVC.setVisible(false);
+
+                                                JTextField write_CVC = new JTextField();
+                                                write_CVC.setBounds(400, 590, 100, 50);
+                                                write_CVC.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                                frame.add(write_CVC);
+                                                methodsElements.add(write_CVC);
+                                                write_CVC.setVisible(false);
+
+                                                JLabel label_write_blik = new JLabel("Podaj kod BLIK: ");
+                                                label_write_blik.setBounds(100, 470, 200, 50);
+                                                label_write_blik.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                                frame.add(label_write_blik);
+                                                methodsElements.add(label_write_blik);
+                                                label_write_blik.setVisible(false);
+
+                                                JTextField write_blik = new JTextField();
+                                                write_blik.setBounds(350, 470, 200, 50);
+                                                write_blik.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                                frame.add(write_blik);
+                                                methodsElements.add(write_blik);
+                                                write_blik.setVisible(false);
+
+                                                JButton pay = new JButton("Zapłać");
+                                                pay.setBounds(500, 750, 200, 50);
+                                                pay.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                                frame.add(pay);
+                                                methodsElements.add(pay);
+                                                pay.setVisible(false);
+
+                                                card.addActionListener(new ActionListener() {
+
+                                                    @Override
+                                                    public void actionPerformed(ActionEvent e) {
+                                                        label_write_blik.setVisible(false);
+                                                        write_blik.setVisible(false);
+
+                                                        label_write_card_number.setVisible(true);
+                                                        label_write_exp_date.setVisible(true);
+                                                        label_write_CVC.setVisible(true);
+
+                                                        write_card_number.setVisible(true);
+                                                        write_exp_date.setVisible(true);
+                                                        write_CVC.setVisible(true);
+
+                                                        pay.setVisible(true);
+                                                    }
+                                                });
+
+                                                blik.addActionListener(new ActionListener() {
+
+                                                    @Override
+                                                    public void actionPerformed(ActionEvent e) {
+                                                        label_write_card_number.setVisible(false);
+                                                        label_write_exp_date.setVisible(false);
+                                                        label_write_CVC.setVisible(false);
+
+                                                        write_card_number.setVisible(false);
+                                                        write_exp_date.setVisible(false);
+                                                        write_CVC.setVisible(false);
+                                                        label_write_blik.setVisible(true);
+                                                        write_blik.setVisible(true);
+
+                                                        pay.setVisible(true);
+                                                    }
+                                                });
+
+                                                pay.addActionListener(new ActionListener() {
+
+                                                    @Override
+                                                    public void actionPerformed(ActionEvent e) {
+                                                        for (JComponent c : methodsElements) {
+                                                            c.setVisible(false);
+                                                        }
+
+                                                        JLabel done = new JLabel("Bilet zakupiony pomyślnie");
+                                                        done.setBounds(100, 200, 1200, 50);
+                                                        done.setFont(new Font("Verdana", Font.PLAIN, 40));
+                                                        frame.add(done);
+
+                                                        JButton download = new JButton("Pobierz bilet");
+                                                        download.setBounds(100, 270, 200, 50);
+                                                        download.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                                        frame.add(download);
+                                                    }
+                                                });
+
+                                            }
+                                        });
                                     }
                                 });
                             }
