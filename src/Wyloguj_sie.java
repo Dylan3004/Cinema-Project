@@ -112,14 +112,14 @@ public class Wyloguj_sie {
                 System.out.println("Nie znaleziono pliku");
             }
 
-            //napis
-            JLabel labelwylogowania = new JLabel("Wylogowano pomyślnie!");
-
-            // TODO: tu wczesniej bylo zamiast labelwylogowania samo label
-
-            labelwylogowania.setBounds(600, 600, 800, 80);
-            labelwylogowania.setFont(new Font("Arial", Font.PLAIN, 30));
-            frame.add(labelwylogowania);
+//            //napis
+//            JLabel labelwylogowania = new JLabel("Wylogowano pomyślnie!");
+//
+//            // TODO: tu wczesniej bylo zamiast labelwylogowania samo label
+//
+//            labelwylogowania.setBounds(600, 600, 800, 80);
+//            labelwylogowania.setFont(new Font("Arial", Font.PLAIN, 30));
+//            frame.add(labelwylogowania);
 
             JButton button8 = new JButton("Wylogowano pomyślnie!");
             button8.setBounds(600, 600, 800, 80);

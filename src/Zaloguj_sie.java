@@ -86,7 +86,8 @@ public class Zaloguj_sie {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
-
+                    new Moje_Konto();
+                    frame.dispose();
                 }
             });
             JButton button7 = new JButton("Wyloguj się");

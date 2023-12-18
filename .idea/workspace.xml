@@ -5,17 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c613c2e4-aae1-423c-8db2-f7f4e1fcab1b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Aktualnosci.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Aktualnosci.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Cennik.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cennik.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MainFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Moje_Konto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Moje_Konto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repertuar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repertuar.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Wyloguj_sie.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Wyloguj_sie.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Zaloguj_sie.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Zaloguj_sie.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cinema.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/cinema.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/logo.PNG" beforeDir="false" afterPath="$PROJECT_DIR$/images/logo.PNG" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,11 +23,16 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2Zd6ySOoti4QvFcb0PvXtHuYcXU" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -46,12 +44,13 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": ";",
     "last_opened_file_path": "C:/GIT/Cinema-Project/images",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -86,7 +85,8 @@
       <option name="presentableId" value="Default" />
       <updated>1702739865230</updated>
       <workItem from="1702739866306" duration="12566000" />
-      <workItem from="1702845379727" duration="5313000" />
+      <workItem from="1702845379727" duration="5758000" />
+      <workItem from="1702903113692" duration="8055000" />
     </task>
     <servers />
   </component>
