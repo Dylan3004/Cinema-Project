@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
+import java.sql.*;
 
 public class Repertuar {
     JFrame frame;
@@ -13,6 +14,9 @@ public class Repertuar {
     private List<JComponent> placesElements = new ArrayList<>();
     private List<JComponent> summaryElements = new ArrayList<>();
     private List<JComponent> methodsElements = new ArrayList<>();
+    private Connection con = null;
+    private Statement st = null;
+    private ResultSet rs = null;
 
     Repertuar()
     {
@@ -170,9 +174,49 @@ public class Repertuar {
         mainElements.add(look_for);
 
         //przykladowe filmy lub wyniki wyszukiwania
-        add_film_text_and_image("Minionki 4", "2023-12-17 16:00", "To już czwarta część przygód zwariowanych żółtych ludzików", "obrazek.png", 600, 350);
-        add_film_text_and_image("Chłopi", "2023-12-17 19:00", "Najnowsza adaptacja historycznej powieści W. Reymonta zrealizowana w nieszablonowej technice", "obrazek.png", 600, 550);
-        add_film_text_and_image("Sylwestrowy maraton filmowy", "2023-12-31 20:00", "Spędz sylwestra i powitaj Nowy Rok w kinie", "obrazek.png", 600, 750);
+        String query = "SELECT * FROM seances INNER JOIN movies USING (MovieID) WHERE seances.IsActive = 1 AND movies.IsActive = 1";
+        
+        try {
+        	Class.forName("com.mysql.cj.jdbc.Driver");
+        	con = DriverManager.getConnection("jdbc:mysql://localhost/cinema?user=root&password=");
+        	st = con.createStatement();
+        	rs= st.executeQuery(query);
+        	int i = 0;
+        	while (rs.next()) {
+        		add_film_text_and_image(rs.getString("Title"), rs.getString("Date") + " " + rs.getString("Time"), rs.getString("Description"), "obrazek.png", 650, 350 + i);
+        		i += 200;
+        	}
+        }
+        catch (Exception ex) {
+        	System.out.println("Coś nie pykło");
+        }
+        finally {
+        	if (rs != null) {
+        		try {
+        			rs.close();
+        		}
+        		catch (SQLException sqlEx) {}
+        		rs = null;
+        	}
+        	if (st != null) {
+        		try {
+        			st.close();
+        		}
+        		catch (SQLException sqlEx) {}
+        		st = null;
+        	}
+        	if (con != null) {
+        		try {
+        			con.close();
+        		}
+        		catch (SQLException sqlEx) {}
+        		con = null;
+        	}
+        }
+        
+        //add_film_text_and_image("Minionki 4", "2023-12-17 16:00", "To już czwarta część przygód zwariowanych żółtych ludzików", "obrazek.png", 600, 350);
+        //add_film_text_and_image("Chłopi", "2023-12-17 19:00", "Najnowsza adaptacja historycznej powieści W. Reymonta zrealizowana w nieszablonowej technice", "obrazek.png", 600, 550);
+        //add_film_text_and_image("Sylwestrowy maraton filmowy", "2023-12-31 20:00", "Spędz sylwestra i powitaj Nowy Rok w kinie", "obrazek.png", 600, 750);
     }
 
     private void add_film_text_and_image(String tytul, String data_i_godzina, String opis, String path, int x, int y) {
