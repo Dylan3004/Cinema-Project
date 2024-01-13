@@ -4,15 +4,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
+import java.sql.*;
 
 public class Repertuar {
     JFrame frame;
     private List<JComponent> mainElements = new ArrayList<>();
+    private List<JComponent> resultsElements = new ArrayList<>();
     private List<JComponent> detailsElements = new ArrayList<>();
     private List<JComponent> numbersElements = new ArrayList<>();
     private List<JComponent> placesElements = new ArrayList<>();
     private List<JComponent> summaryElements = new ArrayList<>();
     private List<JComponent> methodsElements = new ArrayList<>();
+    private Connection con = null;
+    private Statement st = null;
+    private ResultSet rs = null;
 
     Repertuar()
     {
@@ -170,48 +175,140 @@ public class Repertuar {
         mainElements.add(look_for);
 
         //przykladowe filmy lub wyniki wyszukiwania
-        add_film_text_and_image("Minionki 4", "2023-12-17 16:00", "To już czwarta część przygód zwariowanych żółtych ludzików", "obrazek.png", 600, 350);
-        add_film_text_and_image("Chłopi", "2023-12-17 19:00", "Najnowsza adaptacja historycznej powieści W. Reymonta zrealizowana w nieszablonowej technice", "obrazek.png", 600, 550);
-        add_film_text_and_image("Sylwestrowy maraton filmowy", "2023-12-31 20:00", "Spędz sylwestra i powitaj Nowy Rok w kinie", "obrazek.png", 600, 750);
+        String query = "SELECT * FROM seances INNER JOIN movies USING (MovieID) WHERE seances.IsActive = 1 AND movies.IsActive = 1 ORDER BY Date, Time ASC";
+        
+        try {
+        	Class.forName("com.mysql.cj.jdbc.Driver");
+        	con = DriverManager.getConnection("jdbc:mysql://localhost/cinema?user=root&password=");
+        	st = con.createStatement();
+        	rs= st.executeQuery(query);
+        	int i = 0;
+        	while (rs.next()) {
+        		Seance m = new Seance(rs.getString("Date"), rs.getString("Time"), rs.getDouble("Price"), rs.getBoolean("seances.IsActive"), rs.getString("Title"),
+        				rs.getString("Type"), rs.getString("Studio"), rs.getString("Director"), rs.getString("Cast"), rs.getString("Description"), rs.getString("Year"),
+        				rs.getInt("Age"), rs.getBoolean("movies.IsActive"));
+        		add_film_text_and_image(m, 650, 350 + i);
+        		i += 200;
+        	}
+        }
+        catch (Exception ex) {
+        	System.out.println("Problem z bazą danych");
+        }
+        finally {
+        	if (rs != null) {
+        		try {
+        			rs.close();
+        		}
+        		catch (SQLException sqlEx) {}
+        		rs = null;
+        	}
+        	if (st != null) {
+        		try {
+        			st.close();
+        		}
+        		catch (SQLException sqlEx) {}
+        		st = null;
+        	}
+        	if (con != null) {
+        		try {
+        			con.close();
+        		}
+        		catch (SQLException sqlEx) {}
+        		con = null;
+        	}
+        }
+        
+        look_for.addActionListener(new ActionListener() {
+        	@Override
+            public void actionPerformed(ActionEvent e) {
+        		for (JComponent c : resultsElements) {
+        			c.setVisible(false);
+        		}
+        		String query = "SELECT * FROM seances INNER JOIN movies USING (MovieID) WHERE seances.IsActive = 1 AND movies.IsActive = 1 AND Date >= '"
+        				+ date_from.getText() + "' AND Date <= '" + date_to.getText()
+        				+ "' ORDER BY Date, Time ASC";
+                
+                try {
+                	Class.forName("com.mysql.cj.jdbc.Driver");
+                	con = DriverManager.getConnection("jdbc:mysql://localhost/cinema?user=root&password=");
+                	st = con.createStatement();
+                	rs= st.executeQuery(query);
+                	int i = 0;
+                	while (rs.next()) {
+                		Seance m = new Seance(rs.getString("Date"), rs.getString("Time"), rs.getDouble("Price"), rs.getBoolean("seances.IsActive"), rs.getString("Title"),
+                				rs.getString("Type"), rs.getString("Studio"), rs.getString("Director"), rs.getString("Cast"), rs.getString("Description"), rs.getString("Year"),
+                				rs.getInt("Age"), rs.getBoolean("movies.IsActive"));
+                		add_film_text_and_image(m, 650, 350 + i);
+                		i += 200;
+                	}
+                }
+                catch (Exception ex) {
+                	System.out.println("Problem z bazą danych");
+                }
+                finally {
+                	if (rs != null) {
+                		try {
+                			rs.close();
+                		}
+                		catch (SQLException sqlEx) {}
+                		rs = null;
+                	}
+                	if (st != null) {
+                		try {
+                			st.close();
+                		}
+                		catch (SQLException sqlEx) {}
+                		st = null;
+                	}
+                	if (con != null) {
+                		try {
+                			con.close();
+                		}
+                		catch (SQLException sqlEx) {}
+                		con = null;
+                	}
+                }
+            }
+        });
     }
 
-    private void add_film_text_and_image(String tytul, String data_i_godzina, String opis, String path, int x, int y) {
+    private void add_film_text_and_image(Seance m, int x, int y) {
         //dane filmu / seansu
-        JLabel label1 = new JLabel(tytul);
+        JLabel label1 = new JLabel(m.getTitle());
         label1.setBounds(x, y, 1000, 50);
         label1.setFont(new Font("Arial", Font.PLAIN, 30));
         this.frame.add(label1);
-        mainElements.add(label1);
+        resultsElements.add(label1);
 
-        JLabel label2 = new JLabel(data_i_godzina);
+        JLabel label2 = new JLabel(m.getDate() + " " + m.getTime());
         label2.setBounds(x, y + 50, 1000, 50);
         label2.setFont(new Font("Arial", Font.PLAIN, 20));
         this.frame.add(label2);
-        mainElements.add(label2);
+        resultsElements.add(label2);
 
-        JLabel label3 = new JLabel(opis);
+        JLabel label3 = new JLabel(m.getDescription());
         label3.setBounds(x, y + 100, 1000, 50);
         label3.setFont(new Font("Arial", Font.PLAIN, 20));
         this.frame.add(label3);
-        mainElements.add(label3);
+        resultsElements.add(label3);
 
-        ImageIcon image = new ImageIcon(path);
+        ImageIcon image = new ImageIcon("obrazek.png");
         JLabel label = new JLabel(image);
         label.setBounds(x - 500, y, 200, 200);
         this.frame.add(label);
-        mainElements.add(label);
+        resultsElements.add(label);
 
         //przycisk do kupowania
         JButton check_and_buy = new JButton("Zobacz szczegóły i kup bilet");
         check_and_buy.setBounds(x + 800, y + 20, 200, 50);
         frame.add(check_and_buy);
-        mainElements.add(check_and_buy);
+        resultsElements.add(check_and_buy);
         check_and_buy.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 for (JComponent c : mainElements) {
                     c.setVisible(false);
                 }
-                JLabel label_movie_title = new JLabel("Chłopi");
+                JLabel label_movie_title = new JLabel(m.getTitle());
                 label_movie_title.setBounds(100, 200, 1200, 50);
                 label_movie_title.setFont(new Font("Verdana", Font.PLAIN, 40));
                 frame.add(label_movie_title);
@@ -222,11 +319,11 @@ public class Repertuar {
                 frame.add(go_back);
                 detailsElements.add(go_back);
 
-                String description = "<html>Tytuł: Chłopi<br><br>Termin: 2023-12-17 16:00<br><br>Rok produkcji: 2023<br><br>Kategoria wiekowa: 12+<br><br>Reżyser: Dorota Kobiela, Hugh Welchman<br><br>Opis: Film jest trzecią (po wersjach z 1922 i 1973 roku) pełnometrażową adaptacją powieści Władysława Reymonta pod tym samym tytułem, ukazującej cykl życia wiejskiego pod koniec XIX wieku. Chłopi są filmem wykonanym tą samą metodą animacji, co Twój Vincent w reżyserii tego samego duetu – nagrane wcześniej przed kamerą kadry zostały powtórnie namalowane farbą olejną na płótnie.\r\n"
-                        + "\r\n"
-                        + "Film Chłopi został uhonorowany czterema nagrodami na Festiwalu Polskich Filmów Fabularnych, w tym Nagrodą Specjalną Jury oraz Nagrodą Publiczności. Przeważały pozytywne recenzje, choć kontrowersje budziły kwestie zastosowanej metody animacji malarskiej oraz feministycznego przesłania filmu. Chłopi zostali zgłoszeni jako polski kandydat do rywalizacji o Oscara dla najlepszego pełnometrażowego filmu międzynarodowego. (zródło: Wikipedia)</html>";
+                String description = "<html>Tytuł:" + m.getTitle() + "<br><br>Termin: " + m.getDate() + " " + m.getTime() + "<br>" 
+                		+ "<br>Rok produkcji: " + m.getYear().substring(0, 4) + "<br><br>Kategoria wiekowa: " + m.getAge() + "<br><br>Reżyser: " + m.getDirector() + "<br>"
+                		+ "<br>Opis: " + m.getDescription() + "</html>";
                 JLabel label_description = new JLabel(description);
-                label_description.setBounds(100, 300, 800, 600);
+                label_description.setBounds(100, 200, 800, 600);
                 label_description.setFont(new Font("Verdana", Font.PLAIN, 20));
                 frame.add(label_description);
                 detailsElements.add(label_description);
