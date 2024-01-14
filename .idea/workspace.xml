@@ -4,9 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c613c2e4-aae1-423c-8db2-f7f4e1fcab1b" name="Changes" comment="">
+    <list default="true" id="c613c2e4-aae1-423c-8db2-f7f4e1fcab1b" name="Changes" comment="Commited">
+      <change afterPath="$PROJECT_DIR$/images/map.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Aktualnosci.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Aktualnosci.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Cennik.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cennik.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MainFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Moje_Konto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Moje_Konto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Repertuar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repertuar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Wyloguj_sie.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Wyloguj_sie.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Zaloguj_sie.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Zaloguj_sie.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +50,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": ";",
-    "last_opened_file_path": "C:/GIT/Cinema-Project/images",
+    "last_opened_file_path": "D:/Rekrutacja/Cinema-Project/images",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -54,13 +61,21 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Rekrutacja\Cinema-Project\images" />
       <recent name="C:\GIT\Cinema-Project\images" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\GIT\Cinema-Project\src\iamges" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="JScrollablePanelTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="JScrollablePanelTest" />
+      <module name="Layout Project" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="Layout Project" />
@@ -71,6 +86,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.JScrollablePanelTest" />
       </list>
     </recent_temporary>
   </component>
@@ -85,10 +101,16 @@
       <workItem from="1702739866306" duration="12566000" />
       <workItem from="1702845379727" duration="5758000" />
       <workItem from="1702903113692" duration="8333000" />
+      <workItem from="1705243911512" duration="10176000" />
+      <workItem from="1705271392212" duration="2983000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Commited" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commited" />
   </component>
 </project>

@@ -26,15 +26,23 @@ public class Repertuar {
         frame.setLayout(null);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Color kremowy = new Color(255, 248, 220);
-        Color kolorPrzycisku = new Color(200, 100, 50);
-        Color kolorPrzycisku2 = new Color(180, 120, 70);
-        frame.getContentPane().setBackground(kremowy);
+        frame.getContentPane().setBackground(Colors.bacgorundColor);
+
+
+        // logo
+        try {
+            ImageIcon logo = new ImageIcon(new ImageIcon("images/logo.PNG").getImage().getScaledInstance(70, 70, Image.SCALE_DEFAULT));
+            JLabel label = new JLabel(logo);
+            label.setBounds(10, 10, 70, 70);
+            frame.add(label);
+        } catch (Exception e) {
+            System.out.println("Nie znaleziono pliku");
+        }
 
         // przyciski
         JButton button = new JButton("Strona główna");
         button.setBounds(130, 100, 200, 80);
-        button.setBackground(kolorPrzycisku);
+        button.setBackground(Colors.buttonColor);
         frame.add(button);
         button.addActionListener(new ActionListener() {
             @Override
@@ -45,16 +53,18 @@ public class Repertuar {
         });
         JButton button2 = new JButton("Repertuar");
         button2.setBounds(340, 100, 200, 80);
-        button2.setBackground(kolorPrzycisku);
+        button2.setBackground(Colors.buttonColor);
         frame.add(button2);
         button2.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Znajdujesz się już na stronie Repertuar!");
             }
         });
         JButton button3 = new JButton("Aktualności");
         button3.setBounds(550, 100, 200, 80);
-        button3.setBackground(kolorPrzycisku);
+        button3.setBackground(Colors.buttonColor);
         frame.add(button3);
         button3.addActionListener(new ActionListener() {
             @Override
@@ -65,7 +75,7 @@ public class Repertuar {
         });
         JButton button4 = new JButton("Moje konto");
         button4.setBounds(760, 100, 200, 80);
-        button4.setBackground(kolorPrzycisku);
+        button4.setBackground(Colors.buttonColor);
         frame.add(button4);
         button4.addActionListener(new ActionListener() {
             @Override
@@ -76,7 +86,7 @@ public class Repertuar {
         });
         JButton button5 = new JButton("Cennik");
         button5.setBounds(970, 100, 200, 80);
-        button5.setBackground(kolorPrzycisku);
+        button5.setBackground(Colors.buttonColor);
         frame.add(button5);
         button5.addActionListener(new ActionListener() {
             @Override
@@ -85,29 +95,39 @@ public class Repertuar {
                 frame.dispose();
             }
         });
-        JButton button6 = new JButton("Zaloguj się");
-        button6.setBounds(1280, 20, 150, 60);
-        button6.setBackground(kolorPrzycisku2);
-        frame.add(button6);
-        button6.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Zaloguj_sie();
-                frame.dispose();
-            }
-        });
-        JButton button7 = new JButton("Wyloguj się");
-        button7.setBounds(1490, 20, 150, 60);
-        button7.setBackground(kolorPrzycisku2);
-        frame.add(button7);
-        button7.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // jakis komentarz ze znajdujemy sie wlasnie w tej sekcji
-                new Wyloguj_sie();
-                frame.dispose();
-            }
-        });
+        if(!Colors.logged)
+        {
+            JButton button6 = new JButton("Zaloguj się/Zarejestruj się");
+            button6.setBounds(1600, 0, 200, 60);
+            button6.setBackground(Colors.buttonColor2);
+            frame.add(button6);
+            button6.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    new Zaloguj_sie();
+                    frame.dispose();
+                }
+            });
+
+        }
+        else {
+            JButton button7 = new JButton("Wyloguj się");
+            button7.setBounds(1600, 0, 200, 60);
+            button7.setBackground(Colors.buttonColor2);
+            frame.add(button7);
+            button7.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // jakis komentarz ze znajdujemy sie wlasnie w tej sekcji
+                    try {
+                        new Wyloguj_sie();
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    frame.dispose();
+                }
+            });
+        }
         // logo
         ImageIcon logo = new ImageIcon("logo.PNG");
         JLabel label = new JLabel(logo);
@@ -119,6 +139,7 @@ public class Repertuar {
         label_movie_title.setFont(new Font("Verdana", Font.PLAIN, 40));
         frame.add(label_movie_title);
         mainElements.add(label_movie_title);
+
 
         //formularz do wyszukiwania seansow
         JLabel label_date_from = new JLabel("Data od:");
@@ -132,6 +153,8 @@ public class Repertuar {
         date_from.setFont(new Font("Verdana", Font.PLAIN, 20));
         frame.add(date_from);
         mainElements.add(date_from);
+        ToolTipManager.sharedInstance().registerComponent(date_from);
+        date_from.setToolTipText("Prosimy o podanie daty w formacie dd.mm.rrrr");
 
         JLabel label_date_to = new JLabel("Data do:");
         label_date_to.setBounds(420, 270, 100, 30);
@@ -139,11 +162,15 @@ public class Repertuar {
         frame.add(label_date_to);
         mainElements.add(label_date_to);
 
+
         JTextField date_to = new JTextField();
         date_to.setBounds(520, 270, 200, 30);
         date_to.setFont(new Font("Verdana", Font.PLAIN, 20));
         frame.add(date_to);
         mainElements.add(date_to);
+        ToolTipManager.sharedInstance().registerComponent(date_to);
+        date_to.setToolTipText("Prosimy o podanie daty w formacie dd.mm.rrrr");
+
 
         JLabel label_hour_from = new JLabel("Godzina od:");
         label_hour_from.setBounds(740, 270, 150, 30);
@@ -156,6 +183,8 @@ public class Repertuar {
         hour_from.setFont(new Font("Verdana", Font.PLAIN, 20));
         frame.add(hour_from);
         mainElements.add(hour_from);
+        ToolTipManager.sharedInstance().registerComponent(hour_from);
+        hour_from.setToolTipText("Prosimy o podanie daty w formacie gg:mm");
 
         JLabel label_hour_to = new JLabel("Godzina do:");
         label_hour_to.setBounds(1000, 270, 150, 30);
@@ -168,6 +197,8 @@ public class Repertuar {
         hour_to.setFont(new Font("Verdana", Font.PLAIN, 20));
         frame.add(hour_to);
         mainElements.add(hour_to);
+        ToolTipManager.sharedInstance().registerComponent(hour_to);
+        hour_to.setToolTipText("Prosimy o podanie daty w formacie gg:mm");
 
         JButton look_for = new JButton("Szukaj");
         look_for.setBounds(1260, 270, 100, 30);

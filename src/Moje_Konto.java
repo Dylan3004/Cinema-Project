@@ -27,94 +27,60 @@ public class Moje_Konto {
         frame.setLayout(null);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Color kremowy = new Color(255, 248, 220);
-        Color kolorPrzycisku = new Color(200, 100, 50);
-        Color kolorPrzycisku2 = new Color(180, 120, 70);
-        frame.getContentPane().setBackground(kremowy);
+        frame.getContentPane().setBackground(Colors.bacgorundColor);
 
         // przyciski
         JButton button = new JButton("Strona główna");
         button.setBounds(130, 100, 200, 80);
-        button.setBackground(kolorPrzycisku);
+        button.setBackground(Colors.buttonColor);
         frame.add(button);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new MainFrame();
                 frame.dispose();
             }
         });
         JButton button2 = new JButton("Repertuar");
         button2.setBounds(340, 100, 200, 80);
-        button2.setBackground(kolorPrzycisku);
+        button2.setBackground(Colors.buttonColor);
         frame.add(button2);
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Repertuar();
                 frame.dispose();
             }
         });
         JButton button3 = new JButton("Aktualności");
         button3.setBounds(550, 100, 200, 80);
-        button3.setBackground(kolorPrzycisku);
+        button3.setBackground(Colors.buttonColor);
         frame.add(button3);
         button3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Aktualnosci();
                 frame.dispose();
             }
         });
         JButton button4 = new JButton("Moje konto");
         button4.setBounds(760, 100, 200, 80);
-        button4.setBackground(kolorPrzycisku);
+        button4.setBackground(Colors.buttonColor);
         frame.add(button4);
         button4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
-                new Moje_Konto();
-                frame.dispose();
+                JOptionPane.showMessageDialog(frame, "Znajdujesz się już na stronie Moje konto!");
             }
         });
         JButton button5 = new JButton("Cennik");
         button5.setBounds(970, 100, 200, 80);
-        button5.setBackground(kolorPrzycisku);
+        button5.setBackground(Colors.buttonColor);
         frame.add(button5);
         button5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Cennik();
-                frame.dispose();
-            }
-        });
-        JButton button6 = new JButton("Zaloguj się");
-        button6.setBounds(1280, 20, 150, 60);
-        button6.setBackground(kolorPrzycisku2);
-        frame.add(button6);
-        button6.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
-                new Zaloguj_sie();
-                frame.dispose();
-            }
-        });
-        JButton button7 = new JButton("Wyloguj się");
-        button7.setBounds(1490, 20, 150, 60);
-        button7.setBackground(kolorPrzycisku2);
-        frame.add(button7);
-        button7.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // jakis komentarz ze znajdujemy sie wlasnie w tej sekcji
-                JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
-                new Wyloguj_sie();
                 frame.dispose();
             }
         });
@@ -165,19 +131,19 @@ public class Moje_Konto {
 
         JButton login_button = new JButton("Zaloguj się");
         login_button.setBounds(840, 500, 200, 50);
-        login_button.setBackground(kolorPrzycisku);
+        login_button.setBackground(Colors.buttonColor);
         frame.add(login_button);
         mainComponents.add(login_button);
 
         JButton register_button = new JButton("Zarejestruj się");
         register_button.setBounds(620, 500, 200, 50);
-        register_button.setBackground(kolorPrzycisku);
+        register_button.setBackground(Colors.buttonColor);
         frame.add(register_button);
         mainComponents.add(register_button);
 
         JButton forgot_password_button = new JButton("Nie pamiętam hasła");
         forgot_password_button.setBounds(400, 500, 200, 50);
-        forgot_password_button.setBackground(kolorPrzycisku);
+        forgot_password_button.setBackground(Colors.buttonColor);
         frame.add(forgot_password_button);
         mainComponents.add(forgot_password_button);
 
@@ -206,7 +172,7 @@ public class Moje_Konto {
 
         JButton odzyskaj = new JButton("Wyślij e-mail");
         odzyskaj.setBounds(840, 400, 200, 50);
-        odzyskaj.setBackground(kolorPrzycisku);
+        odzyskaj.setBackground(Colors.buttonColor);
         odzyskaj.setVisible(false);
         forgotPasswordComponents.add(odzyskaj);
         frame.add(odzyskaj);
@@ -290,7 +256,7 @@ public class Moje_Konto {
 
         JButton zarejestruj = new JButton("Zarejestruj");
         zarejestruj.setBounds(840, 800, 200, 50);
-        zarejestruj.setBackground(kolorPrzycisku);
+        zarejestruj.setBackground(Colors.buttonColor);
         zarejestruj.setVisible(false);
         registerComponents.add(zarejestruj);
         frame.add(zarejestruj);
@@ -299,21 +265,21 @@ public class Moje_Konto {
         // po zaloguj
         JButton bought_tickets_button = new JButton("Kupione bilety");
         bought_tickets_button.setBounds(100, 350, 200, 50);
-        bought_tickets_button.setBackground(kolorPrzycisku);
+        bought_tickets_button.setBackground(Colors.buttonColor);
         bought_tickets_button.setVisible(false);
         mainAccComponents.add(bought_tickets_button);
         frame.add(bought_tickets_button);
 
         JButton verify_account_button = new JButton("Zweryfikuj konto");
         verify_account_button.setBounds(100, 450, 200, 50);
-        verify_account_button.setBackground(kolorPrzycisku);
+        verify_account_button.setBackground(Colors.buttonColor);
         verify_account_button.setVisible(false);
         mainAccComponents.add(verify_account_button);
         frame.add(verify_account_button);
 
         JButton change_password_button = new JButton("Zmień hasło");
         change_password_button.setBounds(100, 550, 200, 50);
-        change_password_button.setBackground(kolorPrzycisku);
+        change_password_button.setBackground(Colors.buttonColor);
         change_password_button.setVisible(false);
         mainAccComponents.add(change_password_button);
         frame.add(change_password_button);
@@ -329,14 +295,14 @@ public class Moje_Konto {
 
         JButton download_tickets_button = new JButton("Pobierz bilet");
         download_tickets_button.setBounds(900, 450, 300, 50);
-        download_tickets_button.setBackground(kolorPrzycisku);
+        download_tickets_button.setBackground(Colors.buttonColor);
         download_tickets_button.setVisible(false);
         frame.add(download_tickets_button);
         ticketsComponents.add(download_tickets_button);
 
         JButton return_button = new JButton("Zwróć");
         return_button.setBounds(900, 520, 300, 50);
-        return_button.setBackground(kolorPrzycisku);
+        return_button.setBackground(Colors.buttonColor);
         return_button.setVisible(false);
         frame.add(return_button);
         ticketsComponents.add(return_button);
@@ -358,7 +324,7 @@ public class Moje_Konto {
 
         JButton verify_button = new JButton("Zweryfikuj");
         verify_button.setBounds(600, 600, 200, 50);
-        verify_button.setBackground(kolorPrzycisku);
+        verify_button.setBackground(Colors.buttonColor);
         verify_button.setVisible(false);
         frame.add(verify_button);
         verifyComponents.add(verify_button);
@@ -380,7 +346,7 @@ public class Moje_Konto {
 
         JButton change_password_button2 = new JButton("Zmień hasło");
         change_password_button2.setBounds(600, 600, 200, 50);
-        change_password_button2.setBackground(kolorPrzycisku);
+        change_password_button2.setBackground(Colors.buttonColor);
         change_password_button2.setVisible(false);
         frame.add(change_password_button2);
         changePasswordComponents.add(change_password_button2);
@@ -388,7 +354,6 @@ public class Moje_Konto {
         change_password_button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 for(JComponent component : changePasswordComponents) {
                     component.setVisible(false);
                 }
@@ -401,7 +366,6 @@ public class Moje_Konto {
         register_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 for(JComponent component : mainComponents) {
                     component.setVisible(false);
                 }
@@ -415,7 +379,6 @@ public class Moje_Konto {
         zarejestruj.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Moje_Konto();
                 frame.dispose();
             }
@@ -424,7 +387,6 @@ public class Moje_Konto {
         forgot_password_button.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 for(JComponent component : mainComponents) {
                     component.setVisible(false);
                 }
@@ -438,7 +400,6 @@ public class Moje_Konto {
         verify_button.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 for(JComponent component : verifyComponents) {
                     component.setVisible(false);
                 }
@@ -451,7 +412,6 @@ public class Moje_Konto {
         odzyskaj.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 new Moje_Konto();
                 frame.dispose();
             }
@@ -461,7 +421,6 @@ public class Moje_Konto {
         login_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Przycisk został kliknięty!");
                 for (JComponent component : mainComponents) {
                     component.setVisible(false);
                 }
