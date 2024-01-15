@@ -79,7 +79,7 @@ public class Aktualnosci {
         {
             JButton button6 = new JButton("Zaloguj się/Zarejestruj się");
             button6.setBounds(1600, 0, 200, 60);
-            button6.setBackground(Colors.buttonColor2);
+            button6.setBackground(Colors.logginColor);
             frame.add(button6);
             button6.addActionListener(new ActionListener() {
                 @Override
@@ -93,7 +93,7 @@ public class Aktualnosci {
         else {
             JButton button7 = new JButton("Wyloguj się");
             button7.setBounds(1600, 0, 200, 60);
-            button7.setBackground(Colors.buttonColor2);
+            button7.setBackground(Colors.loggoutColor);
             frame.add(button7);
             button7.addActionListener(new ActionListener() {
                 @Override
@@ -133,7 +133,7 @@ public class Aktualnosci {
         label2.setBounds(200, 0, 800, 80);
         label2.setFont(new Font("Arial", Font.PLAIN, 30));
         panel.add(label2);
-        add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","obrazek.png", 0, 100);
+        add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","python/cinema.jpg", 0, 100);
         add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","obrazek.png", 0, 300);
         add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","obrazek.png", 0, 500);
         add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","obrazek.png", 0, 700);
@@ -163,10 +163,14 @@ public class Aktualnosci {
             label.setFont(new Font("Arial", Font.PLAIN, 20));
             this.panel.add(label);
         }
-        ImageIcon image = new ImageIcon(path);
-        JLabel label = new JLabel(image);
-        label.setBounds(x- 800, y, 200, 200);
-        this.panel.add(label);
+        try {
+            ImageIcon kino = new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(200, 200, Image.SCALE_DEFAULT));
+            JLabel label = new JLabel(kino);
+            label.setBounds(x- 800, y, 200, 200);
+            this.panel.add(label);
+        } catch (Exception e) {
+            System.out.println("Nie znaleziono pliku");
+        }
     }
 
     private String[] Slacer(String tekst)

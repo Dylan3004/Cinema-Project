@@ -72,7 +72,7 @@ public class MainFrame{
         {
             JButton button6 = new JButton("Zaloguj się/Zajejestruj się");
             button6.setBounds(1600, 0, 200, 60);
-            button6.setBackground(Colors.buttonColor2);
+            button6.setBackground(Colors.logginColor);
             frame.add(button6);
             button6.addActionListener(new ActionListener() {
                 @Override
@@ -86,7 +86,7 @@ public class MainFrame{
         else {
             JButton button7 = new JButton("Wyloguj się");
             button7.setBounds(1600, 0, 200, 60);
-            button7.setBackground(Colors.buttonColor2);
+            button7.setBackground(Colors.loggoutColor);
             frame.add(button7);
             button7.addActionListener(new ActionListener() {
                 @Override

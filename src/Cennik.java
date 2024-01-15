@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -75,7 +77,7 @@ public class Cennik {
         {
             JButton button6 = new JButton("Zaloguj się/Zarejestruj się");
             button6.setBounds(1600, 0, 200, 60);
-            button6.setBackground(Colors.buttonColor2);
+            button6.setBackground(Colors.logginColor);
             frame.add(button6);
             button6.addActionListener(new ActionListener() {
                 @Override
@@ -89,7 +91,7 @@ public class Cennik {
         else {
             JButton button7 = new JButton("Wyloguj się");
             button7.setBounds(1600, 0, 200, 60);
-            button7.setBackground(Colors.buttonColor2);
+            button7.setBackground(Colors.loggoutColor);
             frame.add(button7);
             button7.addActionListener(new ActionListener() {
                 @Override
@@ -119,8 +121,8 @@ public class Cennik {
         label2.setBounds(300, 250, 800, 50);
         label2.setFont(new Font("Serif", Font.PLAIN, 40));
         frame.add(label2);
-        add_ticket(20,"Studencki", 300, 350);
-        add_ticket(15,"Ulgowy ", 300, 400);
+        add_ticket(20,"Normalny", 300, 350);
+        add_ticket(15,"Studencki", 300, 400);
         add_ticket(10,"Z kartą dużej rodziny", 300, 450);
         JLabel label3 = new JLabel("Zniżki");
         label3.setBounds(300, 600, 600, 50);
