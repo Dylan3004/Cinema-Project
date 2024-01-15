@@ -223,7 +223,7 @@ public class Repertuar {
         	}
         }
         catch (Exception ex) {
-        	System.out.println("Problem z bazą danych");
+        	System.out.println("Problem z bazą danych123");
         }
         finally {
         	if (rs != null) {
@@ -254,10 +254,22 @@ public class Repertuar {
             public void actionPerformed(ActionEvent e) {
         		for (JComponent c : resultsElements) {
         			c.setVisible(false);
+        			//frame.remove(c);
         		}
-        		String query = "SELECT * FROM seances INNER JOIN movies USING (MovieID) WHERE seances.IsActive = 1 AND movies.IsActive = 1 AND Date >= '"
-        				+ date_from.getText() + "' AND Date <= '" + date_to.getText()
-        				+ "' ORDER BY Date, Time ASC";
+        		resultsElements = new ArrayList<>();
+        		String query = "SELECT * FROM seances INNER JOIN movies USING (MovieID) WHERE seances.IsActive = 1 AND movies.IsActive = 1 ";
+        		if (!date_from.getText().isEmpty()) {
+        			query += ("AND Date >= '" + date_from.getText() + "' ");
+        		}
+        		if (!date_to.getText().isEmpty()) {
+        			query += ("AND Date <= '" + date_to.getText() + "' ");
+        		}
+        		if (!hour_from.getText().isEmpty()) {
+        			query += ("AND Time >= '" + hour_from.getText() + "' ");
+        		}
+        		if (!hour_to.getText().isEmpty()) {
+        			query += ("AND Time <= '" + hour_to.getText() + "' ");
+        		}
                 
                 try {
                 	Class.forName("com.mysql.cj.jdbc.Driver");
@@ -274,7 +286,7 @@ public class Repertuar {
                 	}
                 }
                 catch (Exception ex) {
-                	System.out.println("Problem z bazą danych");
+                	System.out.println("Problem z bazą danych456");
                 }
                 finally {
                 	if (rs != null) {
@@ -339,6 +351,10 @@ public class Repertuar {
                 for (JComponent c : mainElements) {
                     c.setVisible(false);
                 }
+                for (JComponent c : resultsElements) {
+                    c.setVisible(false);
+                }
+                
                 JLabel label_movie_title = new JLabel(m.getTitle());
                 label_movie_title.setBounds(100, 200, 1200, 50);
                 label_movie_title.setFont(new Font("Verdana", Font.PLAIN, 40));
@@ -354,7 +370,7 @@ public class Repertuar {
                 		+ "<br>Rok produkcji: " + m.getYear().substring(0, 4) + "<br><br>Kategoria wiekowa: " + m.getAge() + "<br><br>Reżyser: " + m.getDirector() + "<br>"
                 		+ "<br>Opis: " + m.getDescription() + "</html>";
                 JLabel label_description = new JLabel(description);
-                label_description.setBounds(100, 200, 800, 600);
+                label_description.setBounds(100, 250, 800, 600);
                 label_description.setFont(new Font("Verdana", Font.PLAIN, 20));
                 frame.add(label_description);
                 detailsElements.add(label_description);
@@ -374,6 +390,9 @@ public class Repertuar {
                         }
 
                         for (JComponent c : mainElements) {
+                            c.setVisible(true);
+                        }
+                        for (JComponent c : resultsElements) {
                             c.setVisible(true);
                         }
                     }
