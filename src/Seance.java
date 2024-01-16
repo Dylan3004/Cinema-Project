@@ -1,5 +1,7 @@
 
 public class Seance {
+	private int movieID;
+	private int seanceID;
 	private String date;
 	private String time;
 	private Double price;
@@ -14,9 +16,11 @@ public class Seance {
 	private int age;
 	private boolean isMovieActive;
 
-	public Seance(String date, String time, Double price, boolean isSeanceActive, String title, String type,
+	public Seance(int movieID, int seanceID, String date, String time, Double price, boolean isSeanceActive, String title, String type,
              String studio, String director, String cast, String description, String year, int age,
              boolean isMovieActive) {
+	this.movieID = movieID;
+	this.seanceID = seanceID;
     this.date = date;
     this.time = time;
     this.price = price;
@@ -30,6 +34,14 @@ public class Seance {
     this.year = year;
     this.age = age;
     this.isMovieActive = isMovieActive;
+	}
+	
+	public int getMovieID() {
+		return movieID;
+	}
+	
+	public int getSeanceID() {
+		return seanceID;
 	}
 	
 	public String getDate() {
