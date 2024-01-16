@@ -15,12 +15,18 @@ public class Repertuar {
     private List<JComponent> placesElements = new ArrayList<>();
     private List<JComponent> summaryElements = new ArrayList<>();
     private List<JComponent> methodsElements = new ArrayList<>();
+    private List<String> selectedPlaces = new ArrayList<>();
+    private boolean transaction = false;
+    private int number_of_people;
     private Connection con = null;
     private Statement st = null;
     private ResultSet rs = null;
+    
+    private final int GROUP_MIN = 10;
 
     Repertuar()
     {
+    	transaction = false;
         frame = new JFrame("Aplikacja Kinomaniak");
         frame.setSize(1800, 1000);
         frame.setLayout(null);
@@ -223,7 +229,7 @@ public class Repertuar {
         	}
         }
         catch (Exception ex) {
-        	System.out.println("Problem z bazą danych");
+        	System.out.println("Problem z bazą danych123");
         }
         finally {
         	if (rs != null) {
@@ -254,10 +260,22 @@ public class Repertuar {
             public void actionPerformed(ActionEvent e) {
         		for (JComponent c : resultsElements) {
         			c.setVisible(false);
+        			//frame.remove(c);
         		}
-        		String query = "SELECT * FROM seances INNER JOIN movies USING (MovieID) WHERE seances.IsActive = 1 AND movies.IsActive = 1 AND Date >= '"
-        				+ date_from.getText() + "' AND Date <= '" + date_to.getText()
-        				+ "' ORDER BY Date, Time ASC";
+        		resultsElements = new ArrayList<>();
+        		String query = "SELECT * FROM seances INNER JOIN movies USING (MovieID) WHERE seances.IsActive = 1 AND movies.IsActive = 1 ";
+        		if (!date_from.getText().isEmpty()) {
+        			query += ("AND Date >= '" + date_from.getText() + "' ");
+        		}
+        		if (!date_to.getText().isEmpty()) {
+        			query += ("AND Date <= '" + date_to.getText() + "' ");
+        		}
+        		if (!hour_from.getText().isEmpty()) {
+        			query += ("AND Time >= '" + hour_from.getText() + "' ");
+        		}
+        		if (!hour_to.getText().isEmpty()) {
+        			query += ("AND Time <= '" + hour_to.getText() + "' ");
+        		}
                 
                 try {
                 	Class.forName("com.mysql.cj.jdbc.Driver");
@@ -274,7 +292,7 @@ public class Repertuar {
                 	}
                 }
                 catch (Exception ex) {
-                	System.out.println("Problem z bazą danych");
+                	System.out.println("Problem z bazą danych456");
                 }
                 finally {
                 	if (rs != null) {
@@ -339,6 +357,11 @@ public class Repertuar {
                 for (JComponent c : mainElements) {
                     c.setVisible(false);
                 }
+                for (JComponent c : resultsElements) {
+                    c.setVisible(false);
+                }
+                detailsElements = new ArrayList<>();
+                
                 JLabel label_movie_title = new JLabel(m.getTitle());
                 label_movie_title.setBounds(100, 200, 1200, 50);
                 label_movie_title.setFont(new Font("Verdana", Font.PLAIN, 40));
@@ -354,7 +377,7 @@ public class Repertuar {
                 		+ "<br>Rok produkcji: " + m.getYear().substring(0, 4) + "<br><br>Kategoria wiekowa: " + m.getAge() + "<br><br>Reżyser: " + m.getDirector() + "<br>"
                 		+ "<br>Opis: " + m.getDescription() + "</html>";
                 JLabel label_description = new JLabel(description);
-                label_description.setBounds(100, 200, 800, 600);
+                label_description.setBounds(100, 300, 800, 600);
                 label_description.setFont(new Font("Verdana", Font.PLAIN, 20));
                 frame.add(label_description);
                 detailsElements.add(label_description);
@@ -376,6 +399,9 @@ public class Repertuar {
                         for (JComponent c : mainElements) {
                             c.setVisible(true);
                         }
+                        for (JComponent c : resultsElements) {
+                            c.setVisible(true);
+                        }
                     }
                 });
 
@@ -383,6 +409,7 @@ public class Repertuar {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                    	transaction = true;
                         for (JComponent c : detailsElements) {
                             c.setVisible(false);
                         }
@@ -398,7 +425,7 @@ public class Repertuar {
                         frame.add(back_to_details);
                         numbersElements.add(back_to_details);
 
-                        JLabel label_seance_details = new JLabel("Chłopi (2023-12-17 16:00)");
+                        JLabel label_seance_details = new JLabel(m.getTitle() + " (" + m.getDate() + " " + m.getTime() + ")");
                         label_seance_details.setBounds(100, 300, 1200, 50);
                         label_seance_details.setFont(new Font("Verdana", Font.PLAIN, 20));
                         frame.add(label_seance_details);
@@ -493,18 +520,42 @@ public class Repertuar {
                             }
                         });
 
-                        //na razie pomijam przypadek, gdy wprowadzimy nieprawidłowe dane, np. niedodatnia liczbe osob
                         approve_number_of_tickets.addActionListener(new ActionListener() {
 
                             @Override
                             public void actionPerformed(ActionEvent e) {
+                            	int number_normal_tickets, number_student_tickets, number_senior_tickets, number_invalids;
+                            	try {
+	                            	number_normal_tickets = Integer.parseInt(normal_tickets.getText());
+	                            	number_student_tickets = Integer.parseInt(student_tickets.getText());
+	                            	number_senior_tickets = Integer.parseInt(senior_tickets.getText());
+	                            	number_invalids = Integer.parseInt(invalids.getText());
+                            	}
+                            	catch (NumberFormatException nfe) {
+                            		JOptionPane.showMessageDialog(frame, "Wprowadz liczby!");
+                            		return;
+                            	}
+                            	int sum_of_tickets = number_normal_tickets + number_student_tickets + number_senior_tickets + number_invalids;
+                            	if (sum_of_tickets <= 0 || number_normal_tickets < 0 || number_student_tickets < 0 || number_senior_tickets < 0 || number_invalids < 0) {
+                            		JOptionPane.showMessageDialog(frame, "Wprowadzono niedodatnie liczby!");
+                            		return;	
+                            	}
+                            	if (group_ticket.isSelected() && sum_of_tickets < GROUP_MIN) {
+                            		JOptionPane.showMessageDialog(frame, "Aby kupić bilet grupowy wybierz przynajmniej " + GROUP_MIN + " osób!");
+                            		return;	
+                            	}
+                            	if (!group_ticket.isSelected() && sum_of_tickets >= GROUP_MIN) {
+                            		JOptionPane.showMessageDialog(frame, "Dla takiej liczby osób kup bilet grupowy!");
+                            		return;	
+                            	}
+                            	                            	
                                 //usuniecie wszystkiego oprocz menu
                                 for (JComponent c : numbersElements) {
                                     c.setVisible(false);
                                 }
 
                                 //zmienna przechowujaca liczbe biletow, pilnuje, zeby nie zaznaczyc wiecej siedzien niz osob
-                                final int[] number_of_people = {5};
+                                number_of_people = sum_of_tickets;
 
                                 JLabel label_select_places = new JLabel("Wybierz miejsca ze schematu:");
                                 label_select_places.setBounds(100, 200, 1200, 50);
@@ -524,12 +575,12 @@ public class Repertuar {
                                 frame.add(label_screen);
                                 placesElements.add(label_screen);
 
-                                JLabel label_number_of_tickets = new JLabel("Wybierz jeszcze: " + Integer.toString(number_of_people[0]) + " miejsc");
+                                JLabel label_number_of_tickets = new JLabel("Wybierz jeszcze: " + Integer.toString(sum_of_tickets - selectedPlaces.size()) + " miejsc");
                                 label_number_of_tickets.setBounds(100, 800, 500, 50);
                                 label_number_of_tickets.setFont(new Font("Verdana", Font.PLAIN, 20));
                                 frame.add(label_number_of_tickets);
                                 placesElements.add(label_number_of_tickets);
-
+                                
                                 for (int i = 0; i < 10; i++) {
                                     for (int j = 0; j < 5; j++) {
                                         String place_description;
@@ -542,8 +593,8 @@ public class Repertuar {
                                         JButton place = new JButton(place_description);
                                         place.setBounds(100 + (i % 10) * 110, 450 + (j % 10) * 70, 100, 60);
                                         place.setFont(new Font("Verdana", Font.PLAIN, 12));
-                                        if (j == 4)
-                                            place.setBackground(Color.red);
+                                        if (selectedPlaces.contains(place_description) && transaction)
+                                            place.setBackground(Color.orange);
                                         else
                                             place.setBackground(Color.green);
                                         frame.add(place);
@@ -553,12 +604,21 @@ public class Repertuar {
 
                                             @Override
                                             public void actionPerformed(ActionEvent e) {
-                                                if (number_of_people[0] > 0 && place.getBackground() == Color.green) {
+                                                if (number_of_people > 0 && place.getBackground() == Color.green) {
                                                     place.setBackground(Color.orange);
-                                                    number_of_people[0]--;
+                                                    number_of_people--;
                                                     label_number_of_tickets.setVisible(false);
-                                                    label_number_of_tickets.setText("Wybierz jeszcze: " + Integer.toString(number_of_people[0]) + " miejsc");
+                                                    label_number_of_tickets.setText("Wybierz jeszcze: " + Integer.toString(number_of_people) + " miejsc");
                                                     label_number_of_tickets.setVisible(true);
+                                                    selectedPlaces.add(place_description);
+                                                }
+                                                else if (place.getBackground() == Color.orange) {
+                                                	place.setBackground(Color.green);
+                                                	number_of_people++;
+                                                	label_number_of_tickets.setVisible(false);
+                                                    label_number_of_tickets.setText("Wybierz jeszcze: " + Integer.toString(number_of_people) + " miejsc");
+                                                    label_number_of_tickets.setVisible(true);
+                                                    selectedPlaces.remove(place_description);
                                                 }
                                             }
                                         });
