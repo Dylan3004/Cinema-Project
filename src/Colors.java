@@ -10,7 +10,7 @@ public class Colors {
 
     static final Color loggoutColor =  new Color(200,100,100);
 
-    static boolean logged = false;
+    static boolean logged = true;
 
 
 }

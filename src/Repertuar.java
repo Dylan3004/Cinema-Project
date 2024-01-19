@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
 import java.sql.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Repertuar {
     JFrame frame;
@@ -21,6 +23,8 @@ public class Repertuar {
     private Connection con = null;
     private Statement st = null;
     private ResultSet rs = null;
+
+    private boolean Blik ;
     
     private final int GROUP_MIN = 10;
 
@@ -135,7 +139,7 @@ public class Repertuar {
             });
         }
         // logo
-        ImageIcon logo = new ImageIcon("logo.PNG");
+        ImageIcon logo = new ImageIcon("images/logo.PNG");
         JLabel label = new JLabel(logo);
         label.setBounds(10, 10, 70, 70);
         frame.add(label);
@@ -744,12 +748,15 @@ public class Repertuar {
                                                 methodsElements.add(label_write_card_number);
                                                 label_write_card_number.setVisible(false);
 
+
                                                 JTextField write_card_number = new JTextField();
                                                 write_card_number.setBounds(400, 470, 500, 50);
                                                 write_card_number.setFont(new Font("Verdana", Font.PLAIN, 20));
                                                 frame.add(write_card_number);
                                                 methodsElements.add(write_card_number);
                                                 write_card_number.setVisible(false);
+                                                ToolTipManager.sharedInstance().registerComponent(write_card_number);
+                                                write_card_number.setToolTipText("Prosimy o podanie daty w formacie szesnastoznakowego ciągu");
 
                                                 JLabel label_write_exp_date = new JLabel("Podaj datę ważności karty: ");
                                                 label_write_exp_date.setBounds(100, 530, 350, 50);
@@ -764,6 +771,8 @@ public class Repertuar {
                                                 frame.add(write_exp_date);
                                                 methodsElements.add(write_exp_date);
                                                 write_exp_date.setVisible(false);
+                                                ToolTipManager.sharedInstance().registerComponent(write_exp_date);
+                                                write_exp_date.setToolTipText("Prosimy o podanie daty w formacie mm/rr");
 
                                                 JLabel label_write_CVC = new JLabel("Podaj CVC / CVV: ");
                                                 label_write_CVC.setBounds(100, 590, 350, 50);
@@ -772,12 +781,15 @@ public class Repertuar {
                                                 methodsElements.add(label_write_CVC);
                                                 label_write_CVC.setVisible(false);
 
+
                                                 JTextField write_CVC = new JTextField();
                                                 write_CVC.setBounds(400, 590, 100, 50);
                                                 write_CVC.setFont(new Font("Verdana", Font.PLAIN, 20));
                                                 frame.add(write_CVC);
                                                 methodsElements.add(write_CVC);
                                                 write_CVC.setVisible(false);
+                                                ToolTipManager.sharedInstance().registerComponent(write_CVC);
+                                                write_CVC.setToolTipText("Prosimy o podanie trzyznakowego kodu");
 
                                                 JLabel label_write_blik = new JLabel("Podaj kod BLIK: ");
                                                 label_write_blik.setBounds(100, 470, 200, 50);
@@ -792,6 +804,8 @@ public class Repertuar {
                                                 frame.add(write_blik);
                                                 methodsElements.add(write_blik);
                                                 write_blik.setVisible(false);
+                                                ToolTipManager.sharedInstance().registerComponent(write_blik);
+                                                write_blik.setToolTipText("Prosimy o podanie sześciocyfrowego kodu");
 
                                                 JButton pay = new JButton("Zapłać");
                                                 pay.setBounds(500, 750, 200, 50);
@@ -804,6 +818,7 @@ public class Repertuar {
 
                                                     @Override
                                                     public void actionPerformed(ActionEvent e) {
+                                                        Blik = false;
                                                         label_write_blik.setVisible(false);
                                                         write_blik.setVisible(false);
 
@@ -823,6 +838,7 @@ public class Repertuar {
 
                                                     @Override
                                                     public void actionPerformed(ActionEvent e) {
+                                                        Blik = true;
                                                         label_write_card_number.setVisible(false);
                                                         label_write_exp_date.setVisible(false);
                                                         label_write_CVC.setVisible(false);
@@ -841,19 +857,58 @@ public class Repertuar {
 
                                                     @Override
                                                     public void actionPerformed(ActionEvent e) {
-                                                        for (JComponent c : methodsElements) {
-                                                            c.setVisible(false);
+
+                                                        if(Blik)
+                                                        {
+                                                            if(isValidBlikCode(write_blik.getText()))
+                                                            {
+                                                                for (JComponent c : methodsElements) {
+                                                                    c.setVisible(false);
+                                                                }
+
+                                                                JLabel done = new JLabel("Bilet zakupiony pomyślnie");
+                                                                done.setBounds(100, 200, 1200, 50);
+                                                                done.setFont(new Font("Verdana", Font.PLAIN, 40));
+                                                                frame.add(done);
+
+                                                                JButton download = new JButton("Pobierz bilet");
+                                                                download.setBounds(100, 270, 200, 50);
+                                                                download.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                                                frame.add(download);
+                                                            }
+                                                            else{
+                                                                JOptionPane.showMessageDialog(frame, "Dane które wprowadziłeś są niepoprawne spróbuj jeszcze raz");
+                                                                write_blik.setText("");
+                                                            }
+                                                        }
+                                                        else{
+                                                            if(isValidCreditCardNumber(write_card_number.getText()) && isValidCVVNumber(write_CVC.getText()) && isValidExpirationDate(write_exp_date.getText()) )
+                                                            {
+                                                                for (JComponent c : methodsElements) {
+                                                                    c.setVisible(false);
+                                                                }
+
+                                                                JLabel done = new JLabel("Bilet zakupiony pomyślnie");
+                                                                done.setBounds(100, 200, 1200, 50);
+                                                                done.setFont(new Font("Verdana", Font.PLAIN, 40));
+                                                                frame.add(done);
+
+                                                                JButton download = new JButton("Pobierz bilet");
+                                                                download.setBounds(100, 270, 200, 50);
+                                                                download.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                                                frame.add(download);
+
+                                                            }
+                                                            else{
+                                                                JOptionPane.showMessageDialog(frame, "Dane które wprowadziłeś są niepoprawne spróbuj jeszcze raz");
+                                                                write_card_number.setText("");
+                                                                write_CVC.setText("");
+                                                                write_exp_date.setText("");
+                                                            }
                                                         }
 
-                                                        JLabel done = new JLabel("Bilet zakupiony pomyślnie");
-                                                        done.setBounds(100, 200, 1200, 50);
-                                                        done.setFont(new Font("Verdana", Font.PLAIN, 40));
-                                                        frame.add(done);
 
-                                                        JButton download = new JButton("Pobierz bilet");
-                                                        download.setBounds(100, 270, 200, 50);
-                                                        download.setFont(new Font("Verdana", Font.PLAIN, 20));
-                                                        frame.add(download);
+
                                                     }
                                                 });
 
@@ -868,5 +923,46 @@ public class Repertuar {
 
             }
         });
+    }
+
+    public boolean isValidCreditCardNumber(String cardNumber) {
+        // Usuwamy spacje z numeru karty, jeśli są obecne
+        String strippedCardNumber = cardNumber.replaceAll("\\s", "");
+
+        // Sprawdzamy, czy numer karty ma odpowiedni format
+        Pattern pattern = Pattern.compile("^[0-9]{16}$");
+        Matcher matcher = pattern.matcher(strippedCardNumber);
+
+        return matcher.matches();
+    }
+
+    public boolean isValidCVVNumber(String CVV)
+    {
+        return CVV.length() == 3;
+    }
+
+    public boolean isValidExpirationDate(String expirationDate) {
+        // Sprawdzamy, czy data ważności ma odpowiedni format
+        Pattern pattern = Pattern.compile("^(0[1-9]|1[0-2])/(\\d{2})$");
+        Matcher matcher = pattern.matcher(expirationDate);
+
+        if (matcher.matches()) {
+            // Pobieramy miesiąc i rok z pasującego ciągu
+            int month = Integer.parseInt(matcher.group(1));
+            int year = Integer.parseInt(matcher.group(2));
+
+            // Sprawdzamy, czy miesiąc jest w prawidłowym zakresie (01-12) i czy rok jest przynajmniej 20
+            return month >= 1 && month <= 12 && year >= 24;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isValidBlikCode(String blikCode) {
+        // Sprawdzamy, czy kod Blik ma odpowiedni format (6 cyfr)
+        Pattern pattern = Pattern.compile("^[0-9]{6}$");
+        Matcher matcher = pattern.matcher(blikCode);
+
+        return matcher.matches();
     }
 }
