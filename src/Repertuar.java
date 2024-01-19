@@ -3,10 +3,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Set;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.sql.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.*;
 
 public class Repertuar {
     JFrame frame;
@@ -17,7 +20,7 @@ public class Repertuar {
     private List<JComponent> placesElements = new ArrayList<>();
     private List<JComponent> summaryElements = new ArrayList<>();
     private List<JComponent> methodsElements = new ArrayList<>();
-    private List<String> selectedPlaces = new ArrayList<>();
+    private Set<String> selectedPlaces = new HashSet<>();
     private List<String> purchasedPlaces = new ArrayList<>(); 
     private boolean transaction = false;
     private int number_of_people;
@@ -28,6 +31,10 @@ public class Repertuar {
     private boolean Blik ;
     
     private final int GROUP_MIN = 10;
+    private final double PRICE = 20.00;
+    private final double JUNIOR_DISC = 0.7;
+    private final double SENIOR_DISC = 0.8;
+    private final double INVALID_DISC = 0.5;
 
     Repertuar()
     {
@@ -165,7 +172,7 @@ public class Repertuar {
         frame.add(date_from);
         mainElements.add(date_from);
         ToolTipManager.sharedInstance().registerComponent(date_from);
-        date_from.setToolTipText("Prosimy o podanie daty w formacie dd.mm.rrrr");
+        date_from.setToolTipText("Prosimy o podanie daty w formacie rrrr-mm-dd");
 
         JLabel label_date_to = new JLabel("Data do:");
         label_date_to.setBounds(420, 270, 100, 30);
@@ -180,7 +187,7 @@ public class Repertuar {
         frame.add(date_to);
         mainElements.add(date_to);
         ToolTipManager.sharedInstance().registerComponent(date_to);
-        date_to.setToolTipText("Prosimy o podanie daty w formacie dd.mm.rrrr");
+        date_to.setToolTipText("Prosimy o podanie daty w formacie rrrr-mm-dd");
 
 
         JLabel label_hour_from = new JLabel("Godzina od:");
@@ -276,10 +283,10 @@ public class Repertuar {
         			query += ("AND Date <= '" + date_to.getText() + "' ");
         		}
         		if (!hour_from.getText().isEmpty()) {
-        			query += ("AND Time >= '" + hour_from.getText() + "' ");
+        			query += ("AND Time >= '" + hour_from.getText() + ":00' ");
         		}
         		if (!hour_to.getText().isEmpty()) {
-        			query += ("AND Time <= '" + hour_to.getText() + "' ");
+        			query += ("AND Time <= '" + hour_to.getText() + ":00' ");
         		}
                 
                 try {
@@ -547,7 +554,7 @@ public class Repertuar {
                                 	System.out.println(ex.getMessage());
                                 }
 
-                                selectedPlaces = new ArrayList<>();
+                                selectedPlaces = new HashSet<>();
                                 //zmienna przechowujaca liczbe biletow, pilnuje, zeby nie zaznaczyc wiecej siedzien niz osob
                                 number_of_people = sum_of_tickets;
 
@@ -640,7 +647,7 @@ public class Repertuar {
                                         for (JComponent c : numbersElements) {
                                             c.setVisible(true);
                                         }
-                                        selectedPlaces = new ArrayList<>();
+                                        selectedPlaces = new HashSet<>();
                                     }
                                 });
 
@@ -675,13 +682,14 @@ public class Repertuar {
                                                 }
                                             }
                                         });
-
+                                        
+                                        double final_price = number_normal_tickets * PRICE + number_student_tickets * PRICE * JUNIOR_DISC + number_senior_tickets * PRICE * SENIOR_DISC + number_invalids * PRICE * INVALID_DISC;
                                         JLabel label_revision = new JLabel("<html>Tytuł filmu: " + m.getTitle() + "<br>" +
                                                 "Godzina rozpoczęcia: " + m.getTime() + "<br>" +
                                                 "Miejsca: " + selectedPlaces + "<br>" +
                                                 "Rodzaje biletów: Normalne - " + number_normal_tickets + "<br>Uczniowskie / studenckie - " + number_student_tickets + "<br>" +
                                                 "Dla seniorów - " + number_senior_tickets + "<br>Dla niepełnosprawnych - " + number_invalids +
-                                                "<br>Do zapłaty: 100.00 zł</html>");
+                                                "<br>Do zapłaty: " + final_price + " zł</html>");
                                         label_revision.setBounds(100, 320, 1200, 200);
                                         label_revision.setFont(new Font("Verdana", Font.PLAIN, 20));
                                         frame.add(label_revision);
@@ -860,27 +868,14 @@ public class Repertuar {
                                                                 for (JComponent c : methodsElements) {
                                                                     c.setVisible(false);
                                                                 }
-
-                                                                JLabel done = new JLabel("Bilet zakupiony pomyślnie");
-                                                                done.setBounds(100, 200, 1200, 50);
-                                                                done.setFont(new Font("Verdana", Font.PLAIN, 40));
-                                                                frame.add(done);
-
-                                                                JButton download = new JButton("Pobierz bilet");
-                                                                download.setBounds(100, 270, 200, 50);
-                                                                download.setFont(new Font("Verdana", Font.PLAIN, 20));
-                                                                frame.add(download);
-                                                            }
-                                                            else{
-                                                                JOptionPane.showMessageDialog(frame, "Dane które wprowadziłeś są niepoprawne spróbuj jeszcze raz");
-                                                                write_blik.setText("");
-                                                            }
-                                                        }
-                                                        else{
-                                                            if(isValidCreditCardNumber(write_card_number.getText()) && isValidCVVNumber(write_CVC.getText()) && isValidExpirationDate(write_exp_date.getText()) )
-                                                            {
-                                                                for (JComponent c : methodsElements) {
-                                                                    c.setVisible(false);
+                                                                
+                                                                String query = "INSERT INTO purchases (ClientID, SeanceID, PeopleWithoutDiscount, PeopleWithStudentDiscount, PeopleWithSeniorDiscount, InvalidPeople, DiscountForLatecomers, PurchaseTime, Price, BlikCode, IsActive) VALUES (1, "
+                                                                        + m.getSeanceID() + ", " + number_normal_tickets + ", " + number_student_tickets + ", " + number_senior_tickets + ", " + number_invalids + ", 0, NOW(), " +  final_price + ", " + write_blik.getText() + ", 1)";
+                                                                try {
+                                                                	st.executeUpdate(query);
+                                                                }
+                                                                catch (Exception ex) {
+                                                                	System.out.println(ex.getMessage());
                                                                 }
 
                                                                 JLabel done = new JLabel("Bilet zakupiony pomyślnie");
@@ -892,6 +887,85 @@ public class Repertuar {
                                                                 download.setBounds(100, 270, 200, 50);
                                                                 download.setFont(new Font("Verdana", Font.PLAIN, 20));
                                                                 frame.add(download);
+                                                                
+                                                                download.addActionListener(new ActionListener() {
+																	
+																	@Override
+																	public void actionPerformed(ActionEvent e) {
+																		try {
+																			BufferedWriter bw = new BufferedWriter(new FileWriter("tickets/ticket.txt"));
+																			bw.write("Bilet na seans: " + m.getTitle());
+																			bw.write("\nData:" + m.getDate());
+																			bw.write("\nGodzina: " + m.getTime());
+																			bw.write("\nMiejsca na widowni: " + selectedPlaces);
+																			bw.write("\nLiczba osób bez zniżek: " + number_normal_tickets);
+																			bw.write("\nLiczba osób ze zniżką uczniowską: " + number_student_tickets);
+																			bw.write("\nLiczba osób ze zniżką seniorską: " + number_senior_tickets);
+																			bw.write("\nLiczba osób niepełnosprawnych: " + number_invalids);
+																			JOptionPane.showMessageDialog(frame, "Bilet zapisano pomyślnie");
+																			bw.close();
+																		}
+																		catch(IOException ex) {
+																			JOptionPane.showMessageDialog(frame, "Błąd zapisu biletu");
+																			ex.printStackTrace();
+																		}
+																	}
+																});
+                                                            }
+                                                            else{
+                                                                JOptionPane.showMessageDialog(frame, "Dane które wprowadziłeś są niepoprawne, spróbuj jeszcze raz");
+                                                                write_blik.setText("");
+                                                            }
+                                                        }
+                                                        else{
+                                                            if(isValidCreditCardNumber(write_card_number.getText()) && isValidCVVNumber(write_CVC.getText()) && isValidExpirationDate(write_exp_date.getText()) )
+                                                            {
+                                                                for (JComponent c : methodsElements) {
+                                                                    c.setVisible(false);
+                                                                }
+                                                                
+                                                                String query = "INSERT INTO purchases (ClientID, SeanceID, PeopleWithoutDiscount, PeopleWithStudentDiscount, PeopleWithSeniorDiscount, InvalidPeople, DiscountForLatecomers, PurchaseTime, Price, CardNumber, CardDate, CVC, IsActive) VALUES (1, "
+                                                                + m.getSeanceID() + ", " + number_normal_tickets + ", " + number_student_tickets + ", " + number_senior_tickets + ", " + number_invalids + ", 0, NOW(), " +  final_price + ", " + write_card_number.getText() + ", '" + write_exp_date.getText() + "', " + write_CVC.getText() + ", 1)";
+                                                                try {
+                                                                	st.executeUpdate(query);
+                                                                }
+                                                                catch (Exception ex) {
+                                                                	ex.printStackTrace();
+                                                                	System.out.println(write_exp_date.getText().length());
+                                                                }
+                                                                
+                                                                JLabel done = new JLabel("Bilet zakupiony pomyślnie");
+                                                                done.setBounds(100, 200, 1200, 50);
+                                                                done.setFont(new Font("Verdana", Font.PLAIN, 40));
+                                                                frame.add(done);
+
+                                                                JButton download = new JButton("Pobierz bilet");
+                                                                download.setBounds(100, 270, 200, 50);
+                                                                download.setFont(new Font("Verdana", Font.PLAIN, 20));
+                                                                frame.add(download);
+                                                                
+                                                                download.addActionListener(new ActionListener() {
+																	
+																	@Override
+																	public void actionPerformed(ActionEvent e) {
+																		try {
+																			BufferedWriter bw = new BufferedWriter(new FileWriter("tickets/ticket.txt"));
+																			bw.write("Bilet na seans: " + m.getTitle());
+																			bw.write("\nData:" + m.getDate());
+																			bw.write("\nGodzina: " + m.getTime());
+																			bw.write("\nMiejsca na widowni: " + selectedPlaces);
+																			bw.write("\nLiczba osób bez zniżek: " + number_normal_tickets);
+																			bw.write("\nLiczba osób ze zniżką uczniowską: " + number_student_tickets);
+																			bw.write("\nLiczba osób ze zniżką seniorską: " + number_senior_tickets);
+																			bw.write("\nLiczba osób niepełnosprawnych: " + number_invalids);
+																			JOptionPane.showMessageDialog(frame, "Bilet zapisano pomyślnie");
+																			bw.close();
+																		}
+																		catch(IOException ex) {
+																			JOptionPane.showMessageDialog(frame, "Błąd zapisu biletu");
+																		}
+																	}
+																});
 
                                                             }
                                                             else{
