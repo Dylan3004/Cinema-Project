@@ -2,6 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Aktualnosci {
     JFrame frame;
@@ -9,6 +14,10 @@ public class Aktualnosci {
     JPanel panel ;
 
     JScrollPane scrollPane;
+    
+    private Connection con = null;
+    private Statement st = null;
+    private ResultSet rs = null;
 
     Aktualnosci()
     {
@@ -133,10 +142,25 @@ public class Aktualnosci {
         label2.setBounds(200, 0, 800, 80);
         label2.setFont(new Font("Arial", Font.PLAIN, 30));
         panel.add(label2);
-        add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","python/cinema.jpg", 0, 100);
+        
+        String query = "SELECT * FROM newses";
+        try {
+        	Class.forName("com.mysql.cj.jdbc.Driver");
+        	con = DriverManager.getConnection("jdbc:mysql://localhost/cinema?user=root&password=");
+        	st = con.createStatement();
+        	rs= st.executeQuery(query);
+        	while (rs.next()) {
+        		add_film_text_and_image(rs.getString("Title"), "", rs.getString("Content"), "", 0, 100 + 200 * (rs.getInt("NewsID") - 1));
+        	}
+        }
+        catch (Exception ex) {
+        	System.out.println(ex.getMessage());
+        }
+        
+        /*add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","python/cinema.jpg", 0, 100);
         add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","obrazek.png", 0, 300);
         add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","obrazek.png", 0, 500);
-        add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","obrazek.png", 0, 700);
+        add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","obrazek.png", 0, 700);*/
         scrollPane = new JScrollPane(panel);
         scrollPane.setBounds(200, 200, 1200, 700);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -159,7 +183,7 @@ public class Aktualnosci {
         String[] tab = Slacer(text);
         for (int i= 0; i < tab.length; i++) {
             JLabel label = new JLabel(tab[i]);
-            label.setBounds(x, (y+100) + i * 30, 1000, 50);
+            label.setBounds(x, (y+100) + i * 30, 1100, 50);
             label.setFont(new Font("Arial", Font.PLAIN, 20));
             this.panel.add(label);
         }
@@ -185,7 +209,7 @@ public class Aktualnosci {
             {
                 tab[i] = tekst.substring(i * 80);
             }
-            System.out.println(tab[i]);
+            //System.out.println(tab[i]);
         }
         return tab;
     }
