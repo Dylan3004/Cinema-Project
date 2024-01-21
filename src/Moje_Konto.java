@@ -2,13 +2,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import static java.lang.Math.floor;
 
 public class Moje_Konto {
     private List<JComponent> mainComponents = new ArrayList<>();
+    private Integer liczbaBiletowNaStrone = 5;
+    private Integer obecnaStronaBiletow = 1;
 
-    //po zapomnialem hasla
+    // po zapomnialem hasla
     public List<JComponent> forgotPasswordComponents = new ArrayList<>();
 
     // po zaloguj sie
@@ -19,6 +27,9 @@ public class Moje_Konto {
 
     // po zarejestruj sie
     public List<JComponent> registerComponents = new ArrayList<>();
+
+    // prawy gorny rog
+    JButton button6 = new JButton("Zaloguj się/Zarejestruj się");
 
     Moje_Konto()
     {
@@ -84,11 +95,40 @@ public class Moje_Konto {
                 frame.dispose();
             }
         });
-        // logo
-//        ImageIcon logo = new ImageIcon("images/logo.PNG");
-//        JLabel label = new JLabel(logo);
-//        label.setBounds(10, 10, 70, 70);
-//        frame.add(label);
+
+
+        if(!Colors.logged)
+        {
+            button6.setBounds(1600, 0, 200, 60);
+            button6.setBackground(Colors.logginColor);
+            frame.add(button6);
+            button6.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    new Zaloguj_sie();
+                    frame.dispose();
+                }
+            });
+
+        }
+        else {
+            JButton button7 = new JButton("Wyloguj się");
+            button7.setBounds(1600, 0, 200, 60);
+            button7.setBackground(Colors.loggoutColor);
+            frame.add(button7);
+            button7.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // jakis komentarz ze znajdujemy sie wlasnie w tej sekcji
+                    try {
+                        new Wyloguj_sie();
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    frame.dispose();
+                }
+            });
+        }
 
         try {
             ImageIcon logo = new ImageIcon(new ImageIcon("images/logo.PNG").getImage().getScaledInstance(70, 70, Image.SCALE_DEFAULT));
@@ -195,6 +235,7 @@ public class Moje_Konto {
         JTextField r_email = new JTextField();
         r_email.setBounds(500, 320, 400, 50);
         r_email.setFont(new Font("Verdana", Font.PLAIN, 22));
+        r_email.setVisible(false);
         registerComponents.add(r_email);
         frame.add(r_email);
 
@@ -286,66 +327,108 @@ public class Moje_Konto {
 
 
         // bilety
-        JLabel ticket = new JLabel("TWÓJ BILET");
-        ticket.setBounds(650, 400, 250, 50);
-        ticket.setFont(new Font("Verdana", Font.PLAIN, 22));
-        ticket.setVisible(false);
-        frame.add(ticket);
-        ticketsComponents.add(ticket);
+        Integer liczbaStron = 0;
+        liczbaStron = (int) floor(getTicketIDs(getPersonID()).size()/liczbaBiletowNaStrone);
+        JLabel pageNumber = new JLabel("Strona: " + obecnaStronaBiletow + " z " + liczbaStron);
+        pageNumber.setBounds(700, 750, 350, 50);
+        pageNumber.setFont(new Font("Verdana", Font.PLAIN, 22));
+        pageNumber.setVisible(false);
+        frame.add(pageNumber);
+        ticketsComponents.add(pageNumber);
 
-        JButton download_tickets_button = new JButton("Pobierz bilet");
-        download_tickets_button.setBounds(900, 450, 300, 50);
-        download_tickets_button.setBackground(Colors.buttonColor);
-        download_tickets_button.setVisible(false);
-        frame.add(download_tickets_button);
-        ticketsComponents.add(download_tickets_button);
+        List<JLabel> ticketsLabels = new ArrayList<>();
+        for (int i = 0; i < getTicketIDs(getPersonID()).size(); i++) {
+            int j = i%liczbaBiletowNaStrone + 1;
+            JLabel ticket = new JLabel("TWÓJ BILET " + i);
+            ticket.setBounds(550, 250+(j*70), 250, 50);
+            ticket.setFont(new Font("Verdana", Font.PLAIN, 22));
+            ticket.setVisible(false);
 
-        JButton return_button = new JButton("Zwróć");
-        return_button.setBounds(900, 520, 300, 50);
-        return_button.setBackground(Colors.buttonColor);
-        return_button.setVisible(false);
-        frame.add(return_button);
-        ticketsComponents.add(return_button);
+            frame.add(ticket);
+            ticketsLabels.add(ticket);
+            ticketsComponents.add(ticket);
+        }
+
+        List<JButton> downloadTicketButtons = new ArrayList<>();
+        for (int i = 0; i < ticketsLabels.size(); i++) {
+            int j = i%liczbaBiletowNaStrone + 1;
+            JButton download_tickets_button = new JButton("Pobierz");
+            download_tickets_button.setBounds(820, 250+(j*70), 120, 50);
+            download_tickets_button.setBackground(Colors.buttonColor);
+            download_tickets_button.setVisible(false);
+
+            frame.add(download_tickets_button);
+            downloadTicketButtons.add(download_tickets_button);
+            ticketsComponents.add(download_tickets_button);
+        }
+
+        List<JButton> returnTicketButtons = new ArrayList<>();
+        for (int i = 0; i < ticketsLabels.size(); i++) {
+            int j = i%liczbaBiletowNaStrone + 1;
+            JButton return_button = new JButton("Zwróć");
+            return_button.setBounds(960, 250+(j*70), 90, 50);
+            return_button.setBackground(Colors.buttonColor);
+            return_button.setVisible(false);
+
+            frame.add(return_button);
+            returnTicketButtons.add(return_button);
+            ticketsComponents.add(return_button);
+        }
+
+        JButton goRightButton = new JButton(">");
+        goRightButton.setBounds(1050, 750, 50, 50);
+        goRightButton.setBackground(Colors.buttonColor);
+        goRightButton.setVisible(false);
+        frame.add(goRightButton);
+        ticketsComponents.add(goRightButton);
+
+        JButton goLeftButton = new JButton("<");
+        goLeftButton.setBounds(350, 750, 50, 50);
+        goLeftButton.setBackground(Colors.buttonColor);
+        goLeftButton.setVisible(false);
+        frame.add(goLeftButton);
+        ticketsComponents.add(goLeftButton);
+
 
         // weryfikacja
         JLabel verify = new JLabel("Ile masz lat?");
-        verify.setBounds(500, 250, 500, 50);
+        verify.setBounds(500, 335, 500, 50);
         verify.setFont(new Font("Verdana", Font.PLAIN, 36));
         verify.setVisible(false);
         frame.add(verify);
         verifyComponents.add(verify);
 
         JTextField verify_age = new JTextField();
-        verify_age.setBounds(500, 400, 150, 50);
+        verify_age.setBounds(500, 400, 100, 50);
         verify_age.setFont(new Font("Verdana", Font.PLAIN, 28));
         verify_age.setVisible(false);
         frame.add(verify_age);
         verifyComponents.add(verify_age);
 
         JButton verify_button = new JButton("Zweryfikuj");
-        verify_button.setBounds(600, 600, 200, 50);
+        verify_button.setBounds(700, 500, 200, 50);
         verify_button.setBackground(Colors.buttonColor);
         verify_button.setVisible(false);
         frame.add(verify_button);
         verifyComponents.add(verify_button);
 
         // zmiana hasla
-        JLabel change_password = new JLabel("Nowe hasło:");
-        change_password.setBounds(500, 250, 400, 50);
+        JLabel change_password = new JLabel("Podaj nowe hasło:");
+        change_password.setBounds(500, 335, 400, 50);
         change_password.setFont(new Font("Verdana", Font.PLAIN, 36));
         change_password.setVisible(false);
         frame.add(change_password);
         changePasswordComponents.add(change_password);
 
         JPasswordField new_password = new JPasswordField();
-        new_password.setBounds(500, 400, 200, 50);
+        new_password.setBounds(500, 400, 300, 50);
         new_password.setFont(new Font("Verdana", Font.PLAIN, 28));
         new_password.setVisible(false);
         frame.add(new_password);
         changePasswordComponents.add(new_password);
 
         JButton change_password_button2 = new JButton("Zmień hasło");
-        change_password_button2.setBounds(600, 600, 200, 50);
+        change_password_button2.setBounds(700, 500, 200, 50);
         change_password_button2.setBackground(Colors.buttonColor);
         change_password_button2.setVisible(false);
         frame.add(change_password_button2);
@@ -354,11 +437,60 @@ public class Moje_Konto {
         change_password_button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for(JComponent component : changePasswordComponents) {
-                    component.setVisible(false);
+                    JOptionPane.showMessageDialog(frame, "Zmieniono hasło");
+
+                    for(JComponent component : changePasswordComponents) {
+                        component.setVisible(false);
+                    }
+                    for(JComponent component : ticketsComponents){
+                        component.setVisible(true);
+                    }
+                    for(int i = 0; i < getTicketIDs(getPersonID()).size(); i++){
+                        ticketsLabels.get(i*obecnaStronaBiletow).setVisible(false);
+                        downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                        returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                    }
+                    for(int i = 0; i < liczbaBiletowNaStrone; i++){
+                        ticketsLabels.get(i*obecnaStronaBiletow).setVisible(true);
+                        downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
+                        returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
+                    }
+            }
+        });
+
+        goRightButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(obecnaStronaBiletow < floor(getTicketIDs(getPersonID()).size()/liczbaBiletowNaStrone))
+                    obecnaStronaBiletow++;
+
+                for(int i = 0; i < getTicketIDs(getPersonID()).size(); i++){
+                    ticketsLabels.get(i*obecnaStronaBiletow).setVisible(false);
+                    downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                    returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
                 }
-                for(JComponent component : ticketsComponents){
-                    component.setVisible(true);
+                for(int i = 0; i < liczbaBiletowNaStrone; i++){
+                    ticketsLabels.get(i*obecnaStronaBiletow).setVisible(true);
+                    downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
+                    returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
+                }
+            }
+        });
+
+        goLeftButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(obecnaStronaBiletow > 1)
+                    obecnaStronaBiletow--;
+                for(int i = 0; i < getTicketIDs(getPersonID()).size(); i++){
+                    ticketsLabels.get(i*obecnaStronaBiletow).setVisible(false);
+                    downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                    returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                }
+                for(int i = 0; i < liczbaBiletowNaStrone; i++){
+                    ticketsLabels.get(i*obecnaStronaBiletow).setVisible(true);
+                    downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
+                    returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
                 }
             }
         });
@@ -379,32 +511,60 @@ public class Moje_Konto {
         zarejestruj.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Moje_Konto();
-                frame.dispose();
+                if(r_haslo.getText().equals(r_haslo2.getText())) {
+                    // TODO: dodanie danych do bazy danych
+                    String haslo = r_haslo.getText();
+                    String email = r_email.getText();
+                    String imie = r_imie.getText();
+                    String nazwisko = r_nazwisko.getText();
+
+
+                    new Moje_Konto();
+                    frame.dispose();
+                } else{
+                    JOptionPane.showMessageDialog(frame, "Hasła nie są takie same");
+                }
             }
         });
 
         forgot_password_button.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                for(JComponent component : mainComponents) {
-                    component.setVisible(false);
-                }
+                    for (JComponent component : mainComponents) {
+                        component.setVisible(false);
+                    }
 
-                for(JComponent component : forgotPasswordComponents) {
-                    component.setVisible(true);
+                    for (JComponent component : forgotPasswordComponents) {
+                        component.setVisible(true);
+                    }
                 }
-            }
         });
 
         verify_button.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
+                int age = Integer.parseInt(verify_age.getText());
+                if(age < 18) {
+                    JOptionPane.showMessageDialog(frame, "Nie możesz weryfikować konta");
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Konto zostało zweryfikowane");
+                    // TODO: dodac do bazy danych ze konto jest zweryfikowane
+                }
                 for(JComponent component : verifyComponents) {
                     component.setVisible(false);
                 }
                 for(JComponent component : ticketsComponents){
                     component.setVisible(true);
+                }
+                for(int i = 0; i < getTicketIDs(getPersonID()).size(); i++){
+                    ticketsLabels.get(i*obecnaStronaBiletow).setVisible(false);
+                    downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                    returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                }
+                for(int i = 0; i < liczbaBiletowNaStrone; i++){
+                    ticketsLabels.get(i*obecnaStronaBiletow).setVisible(true);
+                    downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
+                    returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
                 }
             }
         });
@@ -412,25 +572,84 @@ public class Moje_Konto {
         odzyskaj.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
+                //TODO: sprawdzic czy jest w bazie
+                boolean JestWBazie = true;
+
+                if(JestWBazie) {
+                JOptionPane.showMessageDialog(frame, "Wysłano e-mail z linkiem do zmiany hasła");
+
                 new Moje_Konto();
                 frame.dispose();
+                } else{
+                    JOptionPane.showMessageDialog(frame, "Niepoprawny adres e-mail");
+                }
             }
         });
 
 
         login_button.addActionListener(new ActionListener() {
+            boolean DaneSaWBazie = true;
+            boolean czyToAdmin = false;
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (JComponent component : mainComponents) {
-                    component.setVisible(false);
-                }
+                // to to pole co bylo wczesniej zbugowane
+                button6.setVisible(false);
 
-                for (JComponent component : mainAccComponents) {
-                    component.setVisible(true);
-                }
+                // TODO: sprawdzic czy dane sa w bazie danych
+                if(DaneSaWBazie) {
+                    Colors.logged = true;
+                    Colors.personID = getPersonID();
 
-                for (JComponent component : ticketsComponents) {
-                    component.setVisible(true);
+                    //TODO: sprawdzic czy to admin z bazy danych
+                    if(czyToAdmin){
+                        Colors.admin = true;
+
+                        new Moje_Konto_Admin();
+                        frame.dispose();
+                    } else{
+                        Colors.admin = false;
+                    }
+
+                    for (JComponent component : mainComponents) {
+                        component.setVisible(false);
+                    }
+
+                    for (JComponent component : mainAccComponents) {
+                        component.setVisible(true);
+                    }
+
+                    for (JComponent component : ticketsComponents) {
+                        component.setVisible(true);
+                    }
+                    for(int i = 0; i < getTicketIDs(getPersonID()).size(); i++){
+                        ticketsLabels.get(i*obecnaStronaBiletow).setVisible(false);
+                        downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                        returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                    }
+                    for(int i = 0; i < liczbaBiletowNaStrone; i++){
+                        ticketsLabels.get(i*obecnaStronaBiletow).setVisible(true);
+                        downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
+                        returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
+                    }
+
+                    JButton button7 = new JButton("Wyloguj się");
+                    button7.setBounds(1600, 0, 200, 60);
+                    button7.setBackground(Colors.loggoutColor);
+                    frame.add(button7);
+                    button7.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            // jakis komentarz ze znajdujemy sie wlasnie w tej sekcji
+                            try {
+                                new Wyloguj_sie();
+                            } catch (InterruptedException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            frame.dispose();
+                        }
+                    });
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Niepoprawne dane logowania");
                 }
             }
         });
@@ -440,6 +659,11 @@ public class Moje_Konto {
                     public void actionPerformed(ActionEvent e) {
                         for(JComponent component : ticketsComponents) {
                             component.setVisible(false);
+                        }
+                        for(int i = 0; i < getTicketIDs(getPersonID()).size(); i++){
+                            ticketsLabels.get(i*obecnaStronaBiletow).setVisible(false);
+                            downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                            returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
                         }
                         for(JComponent component : changePasswordComponents) {
                             component.setVisible(false);
@@ -460,9 +684,18 @@ public class Moje_Konto {
                         for(JComponent component : changePasswordComponents) {
                             component.setVisible(false);
                         }
-
                         for(JComponent component : ticketsComponents) {
                             component.setVisible(true);
+                        }
+                        for(int i = 0; i < getTicketIDs(getPersonID()).size(); i++){
+                            ticketsLabels.get(i*obecnaStronaBiletow).setVisible(false);
+                            downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                            returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                        }
+                        for(int i = 0; i < liczbaBiletowNaStrone; i++){
+                            ticketsLabels.get(i*obecnaStronaBiletow).setVisible(true);
+                            downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
+                            returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
                         }
                     }
         });
@@ -473,17 +706,127 @@ public class Moje_Konto {
                         for(JComponent component : verifyComponents) {
                             component.setVisible(false);
                         }
-                        for(JComponent component : ticketsComponents) {
-                            component.setVisible(false);
-                        }
-
                         for(JComponent component : changePasswordComponents) {
                             component.setVisible(true);
                         }
+                        for(JComponent component : ticketsComponents) {
+                            component.setVisible(false);
+                        }
+                        for(int i = 0; i < getTicketIDs(getPersonID()).size(); i++){
+                            ticketsLabels.get(i*obecnaStronaBiletow).setVisible(false);
+                            downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                            returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                        }
                     }
-                });
+        });
+
+        for(int i = 0; i < returnTicketButtons.size(); i++){
+            final int index = i;
+            returnTicketButtons.get(i).addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // TODO: usunac bilet z bazy danych
+
+                    JOptionPane.showMessageDialog(frame, "Bilet został zwrócony");
+
+                    for (JComponent component : changePasswordComponents) {
+                        component.setVisible(false);
+                    }
+                    for (JComponent component : ticketsComponents) {
+                        component.setVisible(true);
+                    }
+                    for(int i = 0; i < getTicketIDs(getPersonID()).size(); i++){
+                        ticketsLabels.get(i*obecnaStronaBiletow).setVisible(false);
+                        downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                        returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                    }
+                    for(int i = 0; i < liczbaBiletowNaStrone; i++){
+                        ticketsLabels.get(i*obecnaStronaBiletow).setVisible(true);
+                        downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
+                        returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
+                    }
+                }
+            });
+        }
+
+        for(int i = 0; i < downloadTicketButtons.size(); i++){
+            final int index = i;
+            downloadTicketButtons.get(i).addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // TODO: ponizsze odkomentowac + dorobic odczytanie tych rzeeczy z bazy
+//                try {
+//                    BufferedWriter bw = new BufferedWriter(new FileWriter("tickets/ticket.txt"));
+//                    bw.write("Bilet na seans: " + m.getTitle());
+//                    bw.write("\nData:" + m.getDate());
+//                    bw.write("\nGodzina: " + m.getTime());
+//                    bw.write("\nMiejsca na widowni: " + selectedPlaces);
+//                    bw.write("\nLiczba osób bez zniżek: " + number_normal_tickets);
+//                    bw.write("\nLiczba osób ze zniżką uczniowską: " + number_student_tickets);
+//                    bw.write("\nLiczba osób ze zniżką seniorską: " + number_senior_tickets);
+//                    bw.write("\nLiczba osób niepełnosprawnych: " + number_invalids);
+//                    JOptionPane.showMessageDialog(frame, "Bilet zapisano pomyślnie");
+//                    bw.close();
+//                }
+//                catch(IOException ex) {
+//                    JOptionPane.showMessageDialog(frame, "Błąd zapisu biletu");
+//                    ex.printStackTrace();
+//                }
+                    JOptionPane.showMessageDialog(frame, "Bilet został pobrany");
+
+                    for (JComponent component : changePasswordComponents) {
+                        component.setVisible(false);
+                    }
+                    for (JComponent component : ticketsComponents) {
+                        component.setVisible(true);
+                    }
+                    for(int i = 0; i < getTicketIDs(getPersonID()).size(); i++){
+                        ticketsLabels.get(i*obecnaStronaBiletow).setVisible(false);
+                        downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                        returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(false);
+                    }
+                    for(int i = 0; i < liczbaBiletowNaStrone; i++){
+                        ticketsLabels.get(i*obecnaStronaBiletow).setVisible(true);
+                        downloadTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
+                        returnTicketButtons.get(i*obecnaStronaBiletow).setVisible(true);
+                    }
+                }
+            });
+        }
+
+
 
     }
 
+    // TODO: zamienic to na odczyt z bazy
+    private List<Integer> getSeanceIDs(Integer movieID) {
+        List<Integer> seanceIDs = new ArrayList<>();
+        Random random = new Random();
+
+        for(int i = 0; i < random.nextInt(4); i++) {
+            seanceIDs.add(random.nextInt(121));
+        }
+        return seanceIDs;
+    }
+
+    private Integer getMovieID(Integer seanceID) {
+        Random random = new Random();
+        return random.nextInt(121);
+    }
+
+    private List<Integer> getTicketIDs(Integer PersonID) {
+        List<Integer> ticketIDs = new ArrayList<>();
+        Random random = new Random();
+
+        for(int i = 0; i < (random.nextInt(4)+8); i++) {
+            ticketIDs.add(random.nextInt(121));
+        }
+        return ticketIDs;
+    }
+
+    private Integer getPersonID() {
+        Random random = new Random();
+        return random.nextInt(121);
+    }
 
 }
