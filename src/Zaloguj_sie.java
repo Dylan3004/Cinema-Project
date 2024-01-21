@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Zaloguj_sie {
 
@@ -351,12 +352,22 @@ public class Zaloguj_sie {
             change_password_button2.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    for(JComponent component : changePasswordComponents) {
-                        component.setVisible(false);
+                    // TODO: sprawdzenie czy mail jest w bazie
+                    boolean JestWBazie = true;
+
+                    if(JestWBazie){
+                        JOptionPane.showMessageDialog(frame, "Wysłano e-mail z linkiem do zmiany hasła");
+
+                        for(JComponent component : changePasswordComponents) {
+                            component.setVisible(false);
+                        }
+                        for(JComponent component : ticketsComponents){
+                            component.setVisible(true);
+                        }
+                    } else{
+                        JOptionPane.showMessageDialog(frame, "Niepoprawny adres e-mail");
                     }
-                    for(JComponent component : ticketsComponents){
-                        component.setVisible(true);
-                    }
+
                 }
             });
 
@@ -376,8 +387,19 @@ public class Zaloguj_sie {
             zarejestruj.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    new Moje_Konto();
-                    frame.dispose();
+                    if(r_haslo.getText().equals(r_haslo2.getText())) {
+                        // TODO: dodanie danych do bazy danych
+                        String haslo = r_haslo.getText();
+                        String email = r_email.getText();
+                        String imie = r_imie.getText();
+                        String nazwisko = r_nazwisko.getText();
+
+
+                        new Moje_Konto();
+                        frame.dispose();
+                    } else{
+                        JOptionPane.showMessageDialog(frame, "Hasła nie są takie same");
+                    }
                 }
             });
 
@@ -416,18 +438,55 @@ public class Zaloguj_sie {
 
 
             login_button.addActionListener(new ActionListener() {
+                boolean DaneSaWBazie = true;
+                boolean czyToAdmin = true;
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    for (JComponent component : mainComponents) {
-                        component.setVisible(false);
-                    }
+                    // TODO: sprawdzic czy dane sa w bazie danych - wpisac poprawne ID
+                    if(DaneSaWBazie) {
+                        Colors.logged = true;
+                        Colors.personID = getPersonID();
 
-                    for (JComponent component : mainAccComponents) {
-                        component.setVisible(true);
-                    }
+                        //TODO: sprawdzic czy to admin z bazy danych
+                        if(czyToAdmin){
+                            Colors.admin = true;
 
-                    for (JComponent component : ticketsComponents) {
-                        component.setVisible(true);
+                            new Moje_Konto_Admin();
+                            frame.dispose();
+                        } else{
+                            Colors.admin = false;
+                        }
+
+                        for (JComponent component : mainComponents) {
+                            component.setVisible(false);
+                        }
+
+                        for (JComponent component : mainAccComponents) {
+                            component.setVisible(true);
+                        }
+
+                        for (JComponent component : ticketsComponents) {
+                            component.setVisible(true);
+                        }
+
+                        JButton button7 = new JButton("Wyloguj się");
+                        button7.setBounds(1600, 0, 200, 60);
+                        button7.setBackground(Colors.loggoutColor);
+                        frame.add(button7);
+                        button7.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                // jakis komentarz ze znajdujemy sie wlasnie w tej sekcji
+                                try {
+                                    new Wyloguj_sie();
+                                } catch (InterruptedException ex) {
+                                    throw new RuntimeException(ex);
+                                }
+                                frame.dispose();
+                            }
+                        });
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Niepoprawne dane logowania");
                     }
                 }
             });
@@ -479,10 +538,12 @@ public class Zaloguj_sie {
                     }
                 }
             });
-
-
-            // todo dodać przyciski do logowania i rejestracji
         }
+
+    private Integer getPersonID() {
+        Random random = new Random();
+        return random.nextInt(121);
+    }
 
 
 

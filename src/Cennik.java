@@ -121,48 +121,42 @@ public class Cennik {
         label2.setBounds(300, 250, 800, 50);
         label2.setFont(new Font("Serif", Font.PLAIN, 40));
         frame.add(label2);
-        add_ticket(20,"Normalny", 300, 350);
-        add_ticket(15,"Studencki", 300, 400);
-        add_ticket(10,"Z kartą dużej rodziny", 300, 450);
+        add_ticket(20,"Normalny", 350);
+        add_ticket(15,"Studencki", 400);
+        add_ticket(10,"Z kartą dużej rodziny",450);
         JLabel label3 = new JLabel("Zniżki");
         label3.setBounds(300, 600, 600, 50);
         label3.setFont(new Font("Serif", Font.PLAIN, 40));
         frame.add(label3);
-        add_discount(10,"Bilet grupowy", 300, 700);
-        add_discount(20,"Senior 60+", 300, 750);
-        add_discount(30,"Dzieci do 8 roku życia", 300, 800);
+        add_discount(10,"Bilet grupowy", 700);
+        add_discount(20,"Senior 60+", 750);
+        add_discount(30,"Dzieci do 8 roku życia", 800);
 
     }
 
 
 
-    private void add_ticket(double ticket_prize ,String ticket_name,int x ,int y) {
-        int temp = ticket_name.length();
-        for(int i =0;i<80- temp;i++)
-        {
-            ticket_name = ticket_name + ".";
-        }
-        JLabel label = new JLabel(ticket_name + ticket_prize+" zł");
+    private void add_ticket(double ticket_prize ,String ticket_name,int y) {
+        JLabel label = new JLabel(ticket_name);
         label.setFont(new Font("Serif", Font.PLAIN, 20));
-        label.setBounds(x, y, 800, 50);
+        label.setBounds(300, y, 800, 50);
         frame.add(label);
-        System.out.println(ticket_name.length());
 
-
+        JLabel labelPrize = new JLabel(ticket_prize+" zł");
+        labelPrize.setFont(new Font("Serif", Font.PLAIN, 20));
+        labelPrize.setBounds(600, y, 800, 50);
+        frame.add(labelPrize);
     }
 
-    private void add_discount(double discount_procent ,String discount_name,int x ,int y) {
-        int temp = discount_name.length();
-        for(int i =0;i<80- temp;i++)
-        {
-            discount_name = discount_name + ".";
-        }
-        JLabel label = new JLabel(discount_name + discount_procent+" %");
+    private void add_discount(double discount_procent ,String discount_name,int y) {
+        JLabel label = new JLabel(discount_name);
         label.setFont(new Font("Serif", Font.PLAIN, 20));
-        label.setBounds(x, y, 800, 50);
+        label.setBounds(300, y, 800, 50);
         frame.add(label);
-        System.out.println(discount_name.length());
 
-
+        JLabel labelPercent = new JLabel(discount_procent+" %");
+        labelPercent.setFont(new Font("Serif", Font.PLAIN, 20));
+        labelPercent.setBounds(600, y, 800, 50);
+        frame.add(labelPercent);
     }
 }

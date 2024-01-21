@@ -5,10 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c613c2e4-aae1-423c-8db2-f7f4e1fcab1b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/Moje_Konto_Admin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Cennik.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cennik.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Colors.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Colors.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repertuar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repertuar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Moje_Konto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Moje_Konto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Zaloguj_sie.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Zaloguj_sie.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/whatever.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,13 +51,17 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;pr/7&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/Rekrutacja/Cinema-Project/images&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -104,6 +112,8 @@
       <workItem from="1705274436814" duration="76000" />
       <workItem from="1705310760971" duration="1996000" />
       <workItem from="1705621310507" duration="2174000" />
+      <workItem from="1705786900026" duration="9686000" />
+      <workItem from="1705842652622" duration="10701000" />
     </task>
     <task id="LOCAL-00001" summary="Commited">
       <option name="closed" value="true" />

@@ -12,5 +12,7 @@ public class Colors {
 
     static boolean logged = true;
 
+    static boolean admin = false;
 
+    static Integer personID = 0;
 }
