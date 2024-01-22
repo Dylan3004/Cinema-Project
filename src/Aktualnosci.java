@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class Aktualnosci {
     JFrame frame;
@@ -18,6 +19,9 @@ public class Aktualnosci {
     private Connection con = null;
     private Statement st = null;
     private ResultSet rs = null;
+
+    private int Uper = 0;
+    private int Downer = 0;
 
     Aktualnosci()
     {
@@ -151,6 +155,7 @@ public class Aktualnosci {
         	rs= st.executeQuery(query);
         	while (rs.next()) {
         		add_film_text_and_image(rs.getString("Title"), "", rs.getString("Content"), "", 0, 100 + 200 * (rs.getInt("NewsID") - 1));
+
         	}
         }
         catch (Exception ex) {
@@ -166,6 +171,120 @@ public class Aktualnosci {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         frame.setLayout(null);
         frame.add(scrollPane);
+
+
+
+
+
+
+
+        Button Up =  new Button(">");
+        Up.setBounds(1500,600,100,100);
+        Up.setVisible(true);
+        frame.add(Up);
+        Up.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Uper +=1;
+                panel.setVisible(false);
+                panel = new JPanel();
+                panel.setBounds(200, 200, 1000, 1000);
+                panel.setBackground(new Color(0,0,0,0));
+                panel.setLayout(null);
+                panel.setVisible(true);
+                JLabel label2 = new JLabel("Informacje o tym co gramy w najbliższym czasie ");
+                label2.setBounds(200, 0, 800, 80);
+                label2.setFont(new Font("Arial", Font.PLAIN, 30));
+                panel.add(label2);
+
+                String query = "SELECT * FROM newses";
+                try {
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    con = DriverManager.getConnection("jdbc:mysql://localhost/cinema?user=root&password=");
+                    st = con.createStatement();
+                    rs= st.executeQuery(query);
+                    int i = 0;
+                    while (rs.next()) {
+                        System.out.println(Downer - Uper);
+                        if(i < Downer - Uper )
+                            continue;
+                        add_film_text_and_image(rs.getString("Title"), "", rs.getString("Content"), "", 0, 100 + 200 * (rs.getInt("NewsID") - 1));
+                        i++;
+                    }
+                }
+                catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
+
+        /*add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","python/cinema.jpg", 0, 100);
+        add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","obrazek.png", 0, 300);
+        add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","obrazek.png", 0, 500);
+        add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","obrazek.png", 0, 700);*/
+                scrollPane = new JScrollPane(panel);
+                scrollPane.setBounds(200, 200, 1200, 700);
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                frame.setLayout(null);
+                frame.add(scrollPane);
+            }
+
+        });
+
+
+
+
+        Button Down =  new Button("<");
+        Down.setBounds(1500,800,100,100);
+        Down.setVisible(true);
+        frame.add(Down);
+        Down.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // jakis komentarz ze znajdujemy sie wlasnie w tej sekcji
+                Downer +=1;
+                panel.setVisible(false);
+                panel = new JPanel();
+                panel.setBounds(200, 200, 1000, 1000);
+                panel.setBackground(new Color(0,0,0,0));
+                panel.setLayout(null);
+                panel.setVisible(true);
+                JLabel label2 = new JLabel("Informacje o tym co gramy w najbliższym czasie ");
+                label2.setBounds(200, 0, 800, 80);
+                label2.setFont(new Font("Arial", Font.PLAIN, 30));
+                panel.add(label2);
+
+                String query = "SELECT * FROM newses";
+                try {
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    con = DriverManager.getConnection("jdbc:mysql://localhost/cinema?user=root&password=");
+                    st = con.createStatement();
+                    rs= st.executeQuery(query);
+                    int i = 0;
+                    while (rs.next()) {
+                        System.out.println(Downer - Uper);
+                        if(i < Downer - Uper )
+                            continue;
+                        add_film_text_and_image(rs.getString("Title"), "", rs.getString("Content"), "", 0, 100 + 200 * (rs.getInt("NewsID") - 1));
+                        i++;
+
+                    }
+                }
+                catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
+
+        /*add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","python/cinema.jpg", 0, 100);
+        add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","obrazek.png", 0, 300);
+        add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","obrazek.png", 0, 500);
+        add_film_text_and_image("Paythonokalipsa" ,"Sobota 16:30","Film został stworzony przez twórców Trylogii C nauka od podstaw i został nagrodzony złotym wierszem poleceń za najciekawszy film informatyczny ","obrazek.png", 0, 700);*/
+                scrollPane = new JScrollPane(panel);
+                scrollPane.setBounds(200, 200, 1200, 700);
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                frame.setLayout(null);
+                frame.add(scrollPane);
+            }
+        });
+
+
 
 
 
@@ -195,6 +314,8 @@ public class Aktualnosci {
         } catch (Exception e) {
             System.out.println("Nie znaleziono pliku");
         }
+
+
     }
 
     private String[] Slacer(String tekst)
