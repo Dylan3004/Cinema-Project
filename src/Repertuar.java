@@ -582,6 +582,17 @@ public class Repertuar {
                                 frame.add(label_number_of_tickets);
                                 placesElements.add(label_number_of_tickets);
                                 
+                                String query3 = "SELECT PlaceNumber FROM reservations INNER JOIN purchases USING(PurchaseID) WHERE SeanceID = " + m.getSeanceID();
+                                try {
+                                	st.executeQuery(query3);
+                                	while (rs.next()) {
+                                		purchasedPlaces.add(rs.getString("PlaceNumber"));
+                                	}
+                                }
+                                catch (Exception ex) {
+                                	System.out.println(ex.getMessage());
+                                }
+                                
                                 for (int i = 0; i < 10; i++) {
                                     for (int j = 0; j < 5; j++) {
                                         String place_description;
@@ -602,7 +613,7 @@ public class Repertuar {
                                             place.setBackground(Color.green);
                                         frame.add(place);
                                         placesElements.add(place);
-
+                                        
                                         place.addActionListener(new ActionListener() {
 
                                             @Override
@@ -873,6 +884,9 @@ public class Repertuar {
                                                                         + m.getSeanceID() + ", " + number_normal_tickets + ", " + number_student_tickets + ", " + number_senior_tickets + ", " + number_invalids + ", 0, NOW(), " +  final_price + ", " + write_blik.getText() + ", 1)";
                                                                 try {
                                                                 	st.executeUpdate(query);
+                                                                	for (String place : selectedPlaces) {
+                                                                		st.executeUpdate("INSERT INTO reservations (PlaceNumber, PurchaseID) VALUES (" + place + ", (SELECT max(PurchaseID) FROM purchases))");
+                                                                	}
                                                                 }
                                                                 catch (Exception ex) {
                                                                 	System.out.println(ex.getMessage());

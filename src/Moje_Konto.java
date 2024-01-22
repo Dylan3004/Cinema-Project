@@ -5,6 +5,10 @@ import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,6 +34,10 @@ public class Moje_Konto {
 
     // prawy gorny rog
     JButton button6 = new JButton("Zaloguj się/Zarejestruj się");
+    
+    private Connection con = null;
+    private Statement st = null;
+    private ResultSet rs = null;
 
     Moje_Konto()
     {
@@ -588,14 +596,30 @@ public class Moje_Konto {
 
 
         login_button.addActionListener(new ActionListener() {
-            boolean DaneSaWBazie = true;
+            boolean DaneSaWBazie = false;
             boolean czyToAdmin = false;
             @Override
             public void actionPerformed(ActionEvent e) {
                 // to to pole co bylo wczesniej zbugowane
                 button6.setVisible(false);
+                
+                String query = "SELECT EmailAddress, Password FROM clients WHERE ClientID > 1";
+                try {
+                	Class.forName("com.mysql.cj.jdbc.Driver");
+                	con = DriverManager.getConnection("jdbc:mysql://localhost/cinema?user=root&password=");
+                	st = con.createStatement();
+                	rs = st.executeQuery(query);
+                	while (rs.next()) {
+                		if (login.getText().equals(rs.getString("EmailAddress")) && haslo.getText().equals(rs.getString("Password"))) {
+                			DaneSaWBazie = true;
+                			break;
+                		}
+                	}
+                }
+                catch (Exception ex) {
+                	System.out.println(ex.getMessage());
+                }
 
-                // TODO: sprawdzic czy dane sa w bazie danych
                 if(DaneSaWBazie) {
                     Colors.logged = true;
                     Colors.personID = getPersonID();
